@@ -1,10 +1,10 @@
 import Person from "./Person";
 
-const Persons = ({ filteredPersons }) => {
+const Persons = ({ filteredPersons, handleDelete }) => {
   return (
     <>
       {filteredPersons.map((person) => (
-        <Person person={person} key={person.id} />
+        <Person person={person} handleDelete={handleDelete} key={person.id} />
       ))}
     </>
   );

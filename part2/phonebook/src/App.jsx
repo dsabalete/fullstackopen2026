@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons.js";
 
 import FilterField from "./components/FilterField";
 import PersonForm from "./components/PersonForm";
@@ -12,8 +12,8 @@ const App = () => {
   const [newFilter, setNewFilter] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
     });
   }, []);
 
@@ -31,24 +31,49 @@ const App = () => {
     }
 
     if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
-      resetInputs();
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`,
+        )
+      ) {
+        const person = persons.find((p) => p.name === newName);
+        const updatedPerson = { ...person, number: newNumber };
+
+        personService
+          .update(person.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((p) => (p.id === person.id ? returnedPerson : p)),
+            );
+            resetInputs();
+          });
+      }
       return;
     }
 
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     };
 
-    setPersons(persons.concat(personObject));
-    resetInputs();
+    personService.create(personObject).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      resetInputs();
+    });
   };
 
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(newFilter.toLowerCase()),
   );
+
+  const handleDelete = (id) => {
+    const person = persons.find((p) => p.id === id);
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService.deletePerson(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+    }
+  };
 
   return (
     <div>
@@ -68,7 +93,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons filteredPersons={filteredPersons} />
+      <Persons filteredPersons={filteredPersons} handleDelete={handleDelete} />
     </div>
   );
 };
