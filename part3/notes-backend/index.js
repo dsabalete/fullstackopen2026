@@ -1,5 +1,4 @@
 const express = require('express')
-const cors = require('cors')
 const app = express()
 
 const generateId = () => {
@@ -9,7 +8,6 @@ const generateId = () => {
     return String(maxId + 1)
 }
 
-app.use(cors())
 app.use(express.json())
 app.use(express.static('dist'))
 
