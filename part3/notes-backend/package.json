@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "notes-backend",
   "private": true,
   "version": "0.0.0",
   "description": "",
@@ -12,6 +12,7 @@
   "author": "David Sabalete",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   },
   "devDependencies": {
