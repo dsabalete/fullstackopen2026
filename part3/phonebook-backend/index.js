@@ -1,5 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
+const Person = require('./models/person.js')
+
 const app = express()
 
 morgan.token('body', req => JSON.stringify(req.body))
@@ -31,12 +34,10 @@ let persons = [
     }
 ]
 
-const generateId = () => {
-    return Math.floor(Math.random() * 10000000000).toString()
-}
-
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 })
 
 app.get('/info', (request, response) => {
@@ -48,14 +49,11 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const person = persons.find(person => person.id === id)
-
-    if (person) {
+    Person.findById(request.params.id).then(person => {
         response.json(person)
-    } else {
+    }).catch(error => {
         response.status(404).end()
-    }
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -74,22 +72,21 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const nameExists = persons.find(person => person.name.toLocaleLowerCase() === body.name.toLocaleLowerCase())
-    if (nameExists) {
-        return response.status(400).json({
-            error: 'the name already exists in the phonebook'
-        })
-    }
+    // const nameExists = persons.find(person => person.name.toLocaleLowerCase() === body.name.toLocaleLowerCase())
+    // if (nameExists) {
+    //     return response.status(400).json({
+    //         error: 'the name already exists in the phonebook'
+    //     })
+    // }
 
-    const person = {
+    const person = new Person({
         name: body.name,
-        number: body.number,
-        id: generateId(),
-    }
+        number: body.number
+    })
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 const unknownEndpoint = (request, response) => {
