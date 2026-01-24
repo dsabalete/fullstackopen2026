@@ -73,13 +73,6 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    // const nameExists = persons.find(person => person.name.toLocaleLowerCase() === body.name.toLocaleLowerCase())
-    // if (nameExists) {
-    //     return response.status(400).json({
-    //         error: 'the name already exists in the phonebook'
-    //     })
-    // }
-
     const person = new Person({
         name: body.name,
         number: body.number
@@ -95,6 +88,19 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+
+// this has to be the last loaded middleware, also all the routes should be registered before this!
+app.use(errorHandler)
 
 const PORT = 3001
 app.listen(PORT, () => {
