@@ -74,14 +74,22 @@ const App = () => {
       number: newNumber,
     };
 
-    personService.create(personObject).then((returnedPerson) => {
-      setMessage(`${returnedPerson.name} successfully added`);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-      setPersons(persons.concat(returnedPerson));
-      resetInputs();
-    });
+    personService
+      .create(personObject)
+      .then((returnedPerson) => {
+        setMessage(`${returnedPerson.name} successfully added`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+        setPersons(persons.concat(returnedPerson));
+        resetInputs();
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data.error);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      });
   };
 
   const filteredPersons = persons.filter((person) =>
