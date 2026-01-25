@@ -14,3 +14,12 @@ Content-Type: application/json
   "name": "Mo",
   "number": "1111111111"
 }
+
+### Failing request: number without correct format
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Beethoven",
+  "number": "11-880298"
+}
