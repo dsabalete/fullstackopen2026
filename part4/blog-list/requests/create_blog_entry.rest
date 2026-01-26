@@ -19,5 +19,25 @@ Content-Type: application/json
     "likes": 0  
 }
 
+### Create blog without title
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "author": "John Smith",
+    "url": "http://example.com/one-more-blog-entry",
+    "likes": 0  
+}
+
+### Create blog without url
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "One more Blog Entry",
+    "author": "John Smith",
+    "likes": 0  
+}
+
 ### List of all blog entries
 GET http://localhost:3003/api/blogs

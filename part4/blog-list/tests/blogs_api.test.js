@@ -74,6 +74,31 @@ describe('Blogs API tests', () => {
         assert.strictEqual(addedBlog.likes, 0)
     })
 
+    test('create a blog with a missing title returns an error', async () => {
+        const blogWithoutTitle = {
+            author: 'Oscar',
+            url: 'http://missing.title.com',
+            likes: 0
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(blogWithoutTitle)
+            .expect(400)
+    })
+
+    test('create a blog without url property returns an error', async () => {
+        const blogWithoutUrl = {
+            title: 'Blog without url',
+            author: 'Oscar',
+            likes: 0
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(blogWithoutUrl)
+            .expect(400)
+    })
 
     after(async () => {
         await mongoose.connection.close()
