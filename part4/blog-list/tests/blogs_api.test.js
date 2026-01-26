@@ -34,6 +34,27 @@ describe('Blogs API tests', () => {
         })
     })
 
+    test('a valid blog can be added', async () => {
+        const newBlog = {
+            title: 'New Blog Post',
+            author: 'Luis',
+            url: 'http://luis.awesome.es',
+            likes: 1
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+        const contents = blogsAtEnd.map(b => b.title)
+        assert(contents.includes('New Blog Post'))
+    })
+
 
     after(async () => {
         await mongoose.connection.close()
