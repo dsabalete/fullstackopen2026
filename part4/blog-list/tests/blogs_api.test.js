@@ -100,6 +100,28 @@ describe('Blogs API tests', () => {
             .expect(400)
     })
 
+    test('updates information of a single blog post', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+
+        const updatedContent = {
+            ...blogToUpdate,
+            likes: 1001,
+            url: 'XXXX'
+        }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedContent)
+            .expect(200)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        const updatedBlog = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+
+        assert.strictEqual(updatedBlog.likes, 1001)
+        assert.strictEqual(updatedBlog.url, 'XXXX')
+    })
+
     describe('deletion of a blog entry', () => {
         test('succeeds with status code 204 if id is valid', async () => {
             const blogsAtStart = await helper.blogsInDb()
@@ -117,7 +139,6 @@ describe('Blogs API tests', () => {
             assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
         })
     })
-
 
     after(async () => {
         await mongoose.connection.close()
