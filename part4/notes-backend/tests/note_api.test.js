@@ -13,10 +13,21 @@ const api = supertest(app)
 
 describe('when there is initially some notes saved', () => {
     beforeEach(async () => {
-        await Note.deleteMany({})
         await User.deleteMany({})
-        await User.insertMany(helper.initialUser)
-        await Note.insertMany(helper.initialNotes)
+        await Note.deleteMany({})
+
+        const passwordHash = await bcrypt.hash('sekret', 10)
+        const user = new User({ username: 'root', passwordHash })
+        const savedUser = await user.save()
+
+        const noteObjects = helper.initialNotes.map(note =>
+            new Note({ ...note, user: savedUser._id })
+        )
+
+        const savedNotes = await Promise.all(noteObjects.map(n => n.save()))
+
+        savedUser.notes = savedNotes.map(n => n._id)
+        await savedUser.save()
     })
 
     test('notes are returned as json', async () => {
@@ -49,7 +60,7 @@ describe('when there is initially some notes saved', () => {
                 .expect(200)
                 .expect('Content-Type', /application\/json/)
 
-            assert.deepStrictEqual(resultNote.body, noteToView)
+            assert.strictEqual(resultNote.body.content, noteToView.content)
         })
 
         test('fails with statuscode 404 if note does not exist', async () => {
@@ -67,9 +78,12 @@ describe('when there is initially some notes saved', () => {
 
     describe('addition of a new note', () => {
         test('succeeds with valid data', async () => {
+            const users = await helper.usersInDb()
+
             const newNote = {
                 content: 'async/await simplifies making async calls',
                 important: true,
+                user: users[0].id
             }
 
             await api

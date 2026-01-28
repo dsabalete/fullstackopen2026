@@ -5,24 +5,17 @@ const initialNotes = [
     {
         content: 'HTML is easy',
         important: false,
-        user: '697a01515b9bc6194365d380'
     },
     {
         content: 'Browser can execute only JavaScript',
         important: true,
-        user: '697a01515b9bc6194365d380'
     }
 ]
 
-const passwordHash = await bcrypt.hash('testpassword', 10)
-const initialUser = {
-    username: 'testuser',
-    name: 'Test User',
-    password: passwordHash
-}
-
 const nonExistingId = async () => {
-    const note = new Note({ content: 'willremovethissoon', user: '697a01515b9bc6194365d380' })
+    const users = await User.find({})
+    const userId = users.length > 0 ? users[0]._id : null
+    const note = new Note({ content: 'willremovethissoon', user: userId })
     await note.save()
     await note.deleteOne()
 
@@ -41,7 +34,6 @@ const usersInDb = async () => {
 
 module.exports = {
     initialNotes,
-    initialUser,
     nonExistingId,
     notesInDb,
     usersInDb

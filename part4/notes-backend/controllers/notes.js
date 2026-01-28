@@ -19,9 +19,9 @@ notesRouter.get('/:id', async (request, response) => {
 notesRouter.post('/', async (request, response) => {
     const body = request.body
 
-    const user = await User.findById(body.userId)
+    const user = await User.findById(body.user)
     if (!user) {
-        return response.status(400).json({ error: 'userId missing or not valid' })
+        return response.status(400).json({ error: 'user missing or not valid' })
     }
 
     const note = new Note({
