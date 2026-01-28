@@ -11,14 +11,22 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/part3/notes-backend/index.js"
+            "program": "${workspaceFolder}/part4/notes-backend/index.js",
+            "runtimeArgs": [
+                "--watch"
+            ],
+            "env": {
+                "NODE_ENV": "development"
+            },
+            // "console": "integratedTerminal",
+            // "internalConsoleOptions": "neverOpen"
         },
         {
             "type": "chrome",
             "request": "launch",
             "name": "Launch notes (React)",
             "url": "http://localhost:5173",
-            "webRoot": "${workspaceFolder}/part3/notes",
+            "webRoot": "${workspaceFolder}/part4/notes",
             "sourceMapPathOverrides": {
                 "webpack:///src/*": "${webRoot}/src/*"
             }
@@ -30,14 +38,14 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/part3/phonebook-backend/index.js"
+            "program": "${workspaceFolder}/part4/phonebook-backend/index.js"
         },
         {
             "type": "chrome",
             "request": "launch",
             "name": "Launch phonebook (React)",
             "url": "http://localhost:5173",
-            "webRoot": "${workspaceFolder}/part3/phonebook",
+            "webRoot": "${workspaceFolder}/part4/phonebook",
             "sourceMapPathOverrides": {
                 "webpack:///src/*": "${webRoot}/src/*"
             }

@@ -1,8 +1,9 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRvbnBlcGl0byIsImlkIjoiNjk3YTc3NTQyNGQzNDBhMjZiMzRlZjMxIiwiaWF0IjoxNzY5NjMzNjk3fQ.9TwPL0t8_JsZcsH742smRAaZwfJzDK34TCr9QSNCVsg
 
 {
-  "content": "This is a new note created via REST client",
+  "content": "Single page apps use token based auth",
   "important": true
 }
 
