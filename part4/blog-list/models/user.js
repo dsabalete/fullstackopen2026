@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
     username: {
         type: String,
         required: true,
-        minlength: 4,
+        minlength: 3,
         unique: true // this ensures the uniqueness of username
     },
     name: String,

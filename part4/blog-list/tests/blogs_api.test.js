@@ -140,7 +140,53 @@ describe('Blogs API tests', () => {
         })
     })
 
-    after(async () => {
-        await mongoose.connection.close()
+})
+
+describe('Blog Users tests', () => {
+    test('users with password too short are not created', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const invalidUser = {
+            username: 'johndoe',
+            name: 'John Doe',
+            password: 'uh' // <-- too short
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(invalidUser)
+            .expect(400)
+
+        assert(result.body.error.includes('Password too short!'))
+
+        const usersAtEnd = await helper.usersInDb()
+
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
+
+    test('users with username too short are not created', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const invalidUser = {
+            username: 'jo', // <-- too short
+            name: 'John Doe',
+            password: 'XXXXX'
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(invalidUser)
+            .expect(400)
+
+        assert(result.body.error.includes('is shorter than the minimum allowed length'))
+
+        const usersAtEnd = await helper.usersInDb()
+
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+})
+
+after(async () => {
+    await mongoose.connection.close()
 })
