@@ -1,20 +1,21 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBlcGl0byIsImlkIjoiNjk3Yjk5YTk1NWFiNjA3MTkzY2YyZmRhIiwiaWF0IjoxNzY5NzE4MDc4LCJleHAiOjE3Njk3MjE2Nzh9.Rj3ge5M-mB3aILOYGRz39JM22N18nBXvNROvhpBATMQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBlcGl0byIsImlkIjoiNjk3Yjk5YTk1NWFiNjA3MTkzY2YyZmRhIiwiaWF0IjoxNzY5Nzc0Mzk2LCJleHAiOjE3Njk3Nzc5OTZ9.ZhKen405CYNP5YQ5SqPWBEw1zN-2PHcnW5g3Lk6IMdM
 
 {
     "title": "Don Quijote de la Mancha",
     "author": "Cervantes",
     "url": "http://example.com/one-more-blog-entry",
-    "likes": 11000
+    "likes": 3000
 }
 
 ### Create blog entry without likes
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBlcGl0byIsImlkIjoiNjk3Yjk5YTk1NWFiNjA3MTkzY2YyZmRhIiwiaWF0IjoxNzY5Nzc0Mzk2LCJleHAiOjE3Njk3Nzc5OTZ9.ZhKen405CYNP5YQ5SqPWBEw1zN-2PHcnW5g3Lk6IMdM
 
 {
-    "title": "One more Blog Entry",
+    "title": "Just another one",
     "author": "John Smith",
     "url": "http://example.com/one-more-blog-entry",
     "likes": 0  
