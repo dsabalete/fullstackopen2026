@@ -1,0 +1,17 @@
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: Bearer <paste-token-here>
+
+{
+  "content": "Single page apps use token based auth",
+  "important": true
+}
+
+### POST that fails validation
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "foo",
+  "important": false
+}
