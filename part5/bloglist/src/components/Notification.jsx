@@ -1,13 +1,13 @@
 const Notification = ({ message, errorMessage }) => {
   if (!message && !errorMessage) {
-    return null;
+    return null
   }
 
   return (
-    <div className={errorMessage ? "error" : "success"}>
+    <div className={errorMessage ? 'error' : 'success'}>
       {errorMessage || message}
     </div>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

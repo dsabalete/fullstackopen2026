@@ -1,34 +1,34 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 const Blog = ({ blog, updateBlog, removeBlog }) => {
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(false)
 
   const blogStyle = {
-    padding: "1rem",
-    border: "solid",
+    padding: '1rem',
+    border: 'solid',
     borderWidth: 1,
-    marginBottom: "1rem",
-  };
+    marginBottom: '1rem',
+  }
 
   const updateLike = () => {
-    const updatedBlog = { ...blog, likes: blog.likes + 1 };
-    updateBlog(blog.id, updatedBlog);
-  };
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
+    updateBlog(blog.id, updatedBlog)
+  }
 
-  const user = JSON.parse(localStorage.getItem("loggedBlogAppUser"));
-  const isCreator = blog.user.username === user.username;
+  const user = JSON.parse(localStorage.getItem('loggedBlogAppUser'))
+  const isCreator = blog.user.username === user.username
 
   return (
     <div style={blogStyle}>
       <p>
-        <em>{blog.title}</em> - by {blog.author}{" "}
+        <em>{blog.title}</em> - by {blog.author}{' '}
         <button onClick={() => setShowDetails(!showDetails)}>
-          {showDetails ? "hide" : "view"}
+          {showDetails ? 'hide' : 'view'}
         </button>
       </p>
-      <div style={{ display: showDetails ? "block" : "none" }}>
+      <div style={{ display: showDetails ? 'block' : 'none' }}>
         <p>
-          url:{" "}
+          url:{' '}
           <a href={blog.url} target="_blank">
             {blog.url}
           </a>
@@ -42,7 +42,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
