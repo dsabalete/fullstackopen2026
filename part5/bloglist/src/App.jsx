@@ -18,7 +18,11 @@ const App = () => {
   const blogFormRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService
+      .getAll()
+      .then((blogs) =>
+        setBlogs(blogs.sort((a, b) => (b.likes || 0) - (a.likes || 0))),
+      );
   }, []);
 
   useEffect(() => {
@@ -71,7 +75,11 @@ const App = () => {
       }, 5000);
     }
 
-    setBlogs(blogs.concat(returnedBlog));
+    setBlogs(
+      blogs
+        .concat(returnedBlog)
+        .sort((a, b) => (b.likes || 0) - (a.likes || 0)),
+    );
     blogFormRef.current.toggleVisibility();
   };
 
@@ -80,7 +88,11 @@ const App = () => {
     try {
       const returnedBlog = await blogService.update(id, updatedBlog);
       returnedBlog.user = user;
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)));
+      setBlogs(
+        blogs
+          .map((blog) => (blog.id !== id ? blog : returnedBlog))
+          .sort((a, b) => (b.likes || 0) - (a.likes || 0)),
+      );
     } catch (err) {
       console.log(err);
       setErrorMessage(err.response.data.error);
