@@ -1,47 +1,56 @@
-import React from "react";
+import { useState } from "react";
 
-const BlogForm = ({
-  newBlogTitle,
-  setNewBlogTitle,
-  newBlogAuthor,
-  setNewBlogAuthor,
-  newBlogUrl,
-  setNewBlogUrl,
-  addBlog,
-}) => (
-  <form onSubmit={addBlog}>
-    <p>
-      <label>
-        title:
-        <input
-          value={newBlogTitle}
-          onChange={(event) => setNewBlogTitle(event.target.value)}
-        />
-      </label>
-    </p>
+const BlogForm = ({ createBlog }) => {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
-    <p>
-      <label>
-        author:
-        <input
-          value={newBlogAuthor}
-          onChange={(event) => setNewBlogAuthor(event.target.value)}
-        />
-      </label>
-    </p>
+  const addBlog = (event) => {
+    event.preventDefault();
 
-    <p>
-      <label>
-        url:
-        <input
-          value={newBlogUrl}
-          onChange={(event) => setNewBlogUrl(event.target.value)}
-        />
-      </label>
-    </p>
+    createBlog({
+      title: title,
+      author: author,
+      url: url,
+    });
 
-    <button type="submit">save</button>
-  </form>
-);
+    setTitle("");
+    setAuthor("");
+    setUrl("");
+  };
+
+  return (
+    <form onSubmit={addBlog}>
+      <p>
+        <label>
+          title:
+          <input
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </label>
+      </p>
+
+      <p>
+        <label>
+          author:
+          <input
+            value={author}
+            onChange={(event) => setAuthor(event.target.value)}
+          />
+        </label>
+      </p>
+
+      <p>
+        <label>
+          url:
+          <input value={url} onChange={(event) => setUrl(event.target.value)} />
+        </label>
+      </p>
+
+      <button type="submit">save</button>
+    </form>
+  );
+};
 
 export default BlogForm;
