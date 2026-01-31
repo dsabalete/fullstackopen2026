@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import noteService from "./services/notes.js";
-import loginService from "./services/login";
+import loginService from "./services/login.js";
 import Note from "./components/Note.jsx";
 import Notification from "./components/Notification.jsx";
-import Footer from "./components/Footer";
+import Footer from "./components/Footer.jsx";
 import LoginForm from "./components/LoginForm.jsx";
 import NoteForm from "./components/NoteForm.jsx";
+import Togglable from "./components/Togglable.jsx";
 
-const App = (props) => {
+const App = () => {
   const [notes, setNotes] = useState(null);
-  const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState("");
@@ -31,9 +31,11 @@ const App = (props) => {
     }
   }, []);
 
-  if (!notes) {
-    return null;
-  }
+  const addNote = (noteObject) => {
+    noteService.create(noteObject).then((returnedNote) => {
+      setNotes(notes.concat(returnedNote));
+    });
+  };
 
   const toggleImportance = (id) => {
     const note = notes.find((n) => n.id === id);
@@ -42,7 +44,7 @@ const App = (props) => {
     noteService
       .update(id, changedNote)
       .then((returnedNote) => {
-        setNotes(notes.map((note) => (note.id === id ? returnedNote : note)));
+        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
       })
       .catch((error) => {
         setErrorMessage(
@@ -54,25 +56,6 @@ const App = (props) => {
         setNotes(notes.filter((n) => n.id !== id));
       });
   };
-
-  const addNote = (event) => {
-    event.preventDefault();
-    const noteObject = {
-      content: newNote,
-      important: Math.random() > 0.5,
-    };
-
-    noteService.create(noteObject).then((returnedNote) => {
-      setNotes(notes.concat(returnedNote));
-      setNewNote("");
-    });
-  };
-
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value);
-  };
-
-  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -93,6 +76,20 @@ const App = (props) => {
     }
   };
 
+  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
+
+  const loginForm = () => (
+    <Togglable buttonLabel="login">
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin}
+      />
+    </Togglable>
+  );
+
   const handleLogout = () => {
     loginService.logout();
     setUser(null);
@@ -103,25 +100,15 @@ const App = (props) => {
       <h1>Notes app</h1>
       <Notification message={errorMessage} />
 
-      {!user && (
-        <LoginForm
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
-        />
-      )}
+      {!user && loginForm()}
       {user && (
         <div>
           <p>
             {user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
-          <NoteForm
-            newNote={newNote}
-            handleNoteChange={handleNoteChange}
-            addNote={addNote}
-          />
+          <Togglable buttonLabel="new note">
+            <NoteForm createNote={addNote} />
+          </Togglable>
         </div>
       )}
 
@@ -131,7 +118,7 @@ const App = (props) => {
         </button>
       </div>
       <ul>
-        {notesToShow.map((note) => (
+        {notesToShow?.map((note) => (
           <Note
             key={note.id}
             note={note}
@@ -139,11 +126,7 @@ const App = (props) => {
           />
         ))}
       </ul>
-      <NoteForm
-        newNote={newNote}
-        handleNoteChange={handleNoteChange}
-        addNote={addNote}
-      />
+
       <Footer />
     </div>
   );
