@@ -102,6 +102,25 @@ const App = () => {
     }
   };
 
+  const removeBlog = async (id) => {
+    const blogToRemove = blogs.find((b) => b.id === id);
+    if (
+      window.confirm(
+        `Do you really want to remove the blog "${blogToRemove.title}" by ${blogToRemove.author}?`,
+      )
+    ) {
+      try {
+        await blogService.remove(id);
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+      } catch (err) {
+        setErrorMessage(err.response.data.error);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      }
+    }
+  };
+
   const loginForm = () => {
     return (
       <Togglable buttonLabel="login">
@@ -141,7 +160,12 @@ const App = () => {
       <h3 style={{ marginTop: "2em" }}>list of blogs</h3>
       <div>
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateBlog={updateBlog}
+            removeBlog={removeBlog}
+          />
         ))}
       </div>
     </div>
