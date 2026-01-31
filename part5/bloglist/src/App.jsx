@@ -75,6 +75,21 @@ const App = () => {
     blogFormRef.current.toggleVisibility();
   };
 
+  const updateBlog = async (id, updatedBlog) => {
+    const user = updatedBlog.user;
+    try {
+      const returnedBlog = await blogService.update(id, updatedBlog);
+      returnedBlog.user = user;
+      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)));
+    } catch (err) {
+      console.log(err);
+      setErrorMessage(err.response.data.error);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
+
   const loginForm = () => {
     return (
       <Togglable buttonLabel="login">
@@ -114,7 +129,7 @@ const App = () => {
       <h3 style={{ marginTop: "2em" }}>list of blogs</h3>
       <div>
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         ))}
       </div>
     </div>
