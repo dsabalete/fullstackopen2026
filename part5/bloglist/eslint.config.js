@@ -1,42 +1,74 @@
 import js from '@eslint/js'
 import globals from 'globals'
+import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import stylistic from '@stylistic/eslint-plugin'
 
 export default [
-  { ignores: ['dist'] },
+  js.configs.recommended,
   {
-    files: ['**/*.{js,jsx}'],
+    ignores: [
+      'dist',
+      'node_modules',
+      'eslint.config.js',
+      'vite.config.js',
+      '**/coverage/**',
+    ],
+  },
+
+  {
+    files: ['**/*.{js,jsx}', '**/*.test.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+      },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
-        sourceType: 'module'
-      }
+        sourceType: 'module',
+      },
     },
+    settings: { react: { version: '19.2.0' } },
     plugins: {
+      react,
       'react-hooks': reactHooks,
-      'react-refresh': reactRefresh
+      'react-refresh': reactRefresh,
+      '@stylistic/js': stylistic,
     },
     rules: {
       ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true }
+        { allowConstantExport: true },
       ],
-      indent: ['error', 2],
-      'linebreak-style': ['error', 'unix'],
-      quotes: ['error', 'single'],
-      semi: ['error', 'never'],
+      'react/prop-types': 0,
+      '@stylistic/js/indent': ['error', 2],
+      '@stylistic/js/linebreak-style': ['error', 'unix'],
+      '@stylistic/js/quotes': ['error', 'single'],
+      '@stylistic/js/semi': ['error', 'never'],
       eqeqeq: 'error',
-      'no-trailing-spaces': 'error',
-      'object-curly-spacing': ['error', 'always'],
-      'arrow-spacing': ['error', { before: true, after: true }],
-      'no-console': 'off'
-    }
-  }
+      '@stylistic/js/no-trailing-spaces': 'error',
+      '@stylistic/js/object-curly-spacing': ['error', 'always'],
+      '@stylistic/js/arrow-spacing': ['error', { before: true, after: true }],
+      'no-console': 0,
+      'react/react-in-jsx-scope': 'off',
+      'no-unused-vars': 0,
+    },
+  },
+
+  // Tests config
+  {
+    files: ['**/*.test.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.vitest,
+      },
+    },
+  },
 ]

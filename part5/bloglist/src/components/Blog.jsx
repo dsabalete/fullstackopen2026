@@ -19,26 +19,42 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   const isCreator = blog.user.username === user.username
 
   return (
-    <div style={blogStyle}>
-      <p>
-        <em>{blog.title}</em> - by {blog.author}{' '}
-        <button onClick={() => setShowDetails(!showDetails)}>
+    <div style={blogStyle} className="blog">
+      <p className="blog-summary">
+        <em className="blog-title">{blog.title}</em> - by{' '}
+        <span className="blog-author">{blog.author}</span>{' '}
+        <button
+          className="view-button"
+          onClick={() => setShowDetails(!showDetails)}
+        >
           {showDetails ? 'hide' : 'view'}
         </button>
       </p>
-      <div style={{ display: showDetails ? 'block' : 'none' }}>
+      <div
+        className="blog-details"
+        style={{ display: showDetails ? 'block' : 'none' }}
+      >
         <p>
           url:{' '}
-          <a href={blog.url} target="_blank">
+          <a className="blog-url" href={blog.url} target="_blank">
             {blog.url}
           </a>
         </p>
         <p>
-          likes: {blog.likes} <button onClick={() => updateLike()}>like</button>
+          likes: <span className="blog-likes">{blog.likes}</span>{' '}
+          <button className="like-button" onClick={() => updateLike()}>
+            like
+          </button>
         </p>
-        <p>{blog.user && <span>added by {blog.user.name}</span>}</p>
+        <p>
+          {blog.user && (
+            <span className="blog-added">added by {blog.user.name}</span>
+          )}
+        </p>
         {isCreator && (
-          <button onClick={() => removeBlog(blog.id)}>remove</button>
+          <button className="remove-button" onClick={() => removeBlog(blog.id)}>
+            remove
+          </button>
         )}
       </div>
     </div>
