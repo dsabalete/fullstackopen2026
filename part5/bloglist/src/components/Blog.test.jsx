@@ -37,7 +37,7 @@ describe('<Blog /> when user is the creator of the blog entry', () => {
     const mockHandler = vi.fn()
 
     const blog = {
-      title: 'Component testing is done with react-testing-library',
+      title: 'Title and author shown by default',
       author: 'authortest',
       url: 'urltest',
       likes: 5,
@@ -69,5 +69,39 @@ describe('<Blog /> when user is the creator of the blog entry', () => {
     expect(urlEl).not.toBeVisible()
     expect(likesEl).toBeDefined()
     expect(likesEl).not.toBeVisible()
+  })
+
+  test('blog url and likes are shown when the button is clicked', async () => {
+    const mockHandler = vi.fn()
+
+    const blog = {
+      title: 'Url and likes shown when button is clicked',
+      author: 'authortest',
+      url: 'urltest',
+      likes: 5,
+      user: { name: 'usertest', username: 'usernametest' },
+    }
+
+    // mock logged in user in localStorage so Blog can determine creator
+    localStorage.setItem(
+      'loggedBlogAppUser',
+      JSON.stringify({ username: 'usernametest' }),
+    )
+
+    const { container } = render(
+      <Blog blog={blog} updateBlog={mockHandler} removeBlog={mockHandler} />,
+    )
+
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    // URL and likes should now be visible
+    const urlEl = container.querySelector('.blog-url')
+    const likesEl = container.querySelector('.blog-likes')
+    expect(urlEl).toBeDefined()
+    expect(urlEl).toBeVisible()
+    expect(likesEl).toBeDefined()
+    expect(likesEl).toBeVisible()
   })
 })
