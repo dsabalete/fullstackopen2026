@@ -1,17 +1,24 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import stylistic from '@stylistic/eslint-plugin';
-
+import js from '@eslint/js'
+import globals from 'globals'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import stylistic from '@stylistic/eslint-plugin'
 
 export default [
   js.configs.recommended,
-  { ignores: ['dist', 'node_modules', 'eslint.config.js', 'vite.config.js', '**/coverage/**'] },
+  {
+    ignores: [
+      'dist',
+      'node_modules',
+      'eslint.config.js',
+      'vite.config.js',
+      '**/coverage/**',
+    ],
+  },
 
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['**/*.{js,jsx}', '**/*.test.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
@@ -28,7 +35,7 @@ export default [
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      '@stylistic/js': stylistic
+      '@stylistic/js': stylistic,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -43,15 +50,25 @@ export default [
       'react/prop-types': 0,
       '@stylistic/js/indent': ['error', 2],
       '@stylistic/js/linebreak-style': ['error', 'unix'],
-      '@stylistic/js/quotes': ["error", "single"],
-      '@stylistic/js/semi': ["error", "never"],
-      'eqeqeq': 'error',
-      '@stylistic/js/no-trailing-spaces': "error",
-      '@stylistic/js/object-curly-spacing': ["error", "always"],
-      '@stylistic/js/arrow-spacing': ["error", { "before": true, "after": true }],
+      '@stylistic/js/quotes': ['error', 'single'],
+      '@stylistic/js/semi': ['error', 'never'],
+      eqeqeq: 'error',
+      '@stylistic/js/no-trailing-spaces': 'error',
+      '@stylistic/js/object-curly-spacing': ['error', 'always'],
+      '@stylistic/js/arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 0,
-      "react/react-in-jsx-scope": "off",
-      "no-unused-vars": 0
-    }
+      'react/react-in-jsx-scope': 'off',
+      'no-unused-vars': 0,
+    },
   },
-];
+
+  // Tests config
+  {
+    files: ['**/*.test.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.vitest,
+      },
+    },
+  },
+]

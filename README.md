@@ -25,4 +25,7 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - bloglist-backend
   - notes
   - notes-backend
-- [ ] [Part 5 - Testing React Apps](part5) // TODO
+
+- [ ] [Part 5 - Testing React Apps](part5)
+  - notes
+  - notes-backend
