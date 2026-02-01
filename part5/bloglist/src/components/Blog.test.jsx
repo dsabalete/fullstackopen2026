@@ -71,6 +71,38 @@ describe('<Blog /> when user is the creator of the blog entry', () => {
     expect(likesEl).not.toBeVisible()
   })
 
+  test('clicking the like button twice calls event handler twice', async () => {
+    const mockHandler = vi.fn()
+
+    const blog = {
+      title: 'Component testing is done with react-testing-library',
+      author: 'authortest',
+      url: 'urltest',
+      likes: 5,
+      id: 'blogid123',
+      user: { name: 'usertest', username: 'usernametest' },
+    }
+
+    localStorage.setItem(
+      'loggedBlogAppUser',
+      JSON.stringify({ username: 'usernametest' }),
+    )
+
+    const user = userEvent.setup()
+    const { container } = render(
+      <Blog blog={blog} updateBlog={mockHandler} removeBlog={vi.fn()} />,
+    )
+
+    const viewButton = container.querySelector('.view-button')
+    await user.click(viewButton)
+
+    const likeButton = container.querySelector('.like-button')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandler).toHaveBeenCalledTimes(2)
+  })
+
   test('blog url and likes are shown when the button is clicked', async () => {
     const mockHandler = vi.fn()
 
