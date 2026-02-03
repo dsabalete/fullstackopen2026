@@ -1,5 +1,5 @@
 const { test, expect, describe, beforeEach } = require('@playwright/test')
-const { loginWith, createBlog } = require('./helper.js')
+const { loginWith, createBlog, likeBlog } = require('./helper.js')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -76,14 +76,31 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'logout' }).click()
       await expect(page.getByText('Test User logged in')).not.toBeVisible()
 
-      // Login as the second user
+      // Login as the 'other' user
       await loginWith(page, 'other', 'password')
       await expect(page.getByText('Other User logged in')).toBeVisible()
 
+      // Check that the 'other' user can't remove the blog
       await page.getByText('new blog title', { exact: true }).waitFor()
       await page.getByRole('button', { name: 'view' }).click()
       await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
     }) 
+
+    test('multiple blogs are ordered by likes', async ({ page }) => {
+      await createBlog(page, 'blog without likes', 'author1', 'url1')
+      await createBlog(page, 'blog with many likes', 'author2', 'url2')
+      await createBlog(page, 'blog with medium likes', 'author3', 'url3')
+      
+      // Like the blogs
+      await likeBlog(page, 'blog with many likes', 5)
+      await likeBlog(page, 'blog with medium likes', 2)
+      
+      // Check the order of the blogs
+      const blogs = page.locator('.blog')
+      await expect(blogs.first()).toContainText('blog with many likes')
+      await expect(blogs.nth(1)).toContainText('blog with medium likes')
+      await expect(blogs.nth(2)).toContainText('blog without likes')
+    })
   })
 
 })
