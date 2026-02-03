@@ -16,7 +16,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   }
 
   const user = JSON.parse(localStorage.getItem('loggedBlogAppUser'))
-  const isCreator = blog.user.username === user.username
+  const isCreator = blog.user.username === user?.username
 
   return (
     <div style={blogStyle} className="blog">
