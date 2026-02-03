@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog, removeBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog, username }) => {
   const [showDetails, setShowDetails] = useState(false)
 
   const blogStyle = {
@@ -15,8 +15,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
     updateBlog(blog.id, updatedBlog)
   }
 
-  const user = JSON.parse(localStorage.getItem('loggedBlogAppUser'))
-  const isCreator = blog.user.username === user?.username
+  const isCreator = blog.user.username === username
 
   return (
     <div style={blogStyle} className="blog">

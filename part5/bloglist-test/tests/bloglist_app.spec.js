@@ -42,6 +42,9 @@ describe('Blog app', () => {
       createBlog(page, 'new blog title', 'new blog author', 'new blog url')
       await expect(page.getByText('new blog title', { exact: true })).toBeVisible()
       await expect(page.getByText('new blog author', { exact: true })).toBeVisible()
+      
+      await page.getByRole('button', { name: 'view' }).click()
+      await expect(page.getByText('added by Test User', { exact: true })).toBeVisible()
     })
 
     test('a blog can be liked', async ({ page }) => {
@@ -49,7 +52,15 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'view' }).click()
       await page.getByRole('button', { name: 'like' }).click()
       await expect(page.getByText('likes: 1')).toBeVisible()
-    })    
+    })
+    
+    test('a blog can be removed by the owner', async ({ page }) => {
+      createBlog(page, 'new blog title', 'new blog author', 'new blog url')
+      page.on('dialog', dialog => dialog.accept());
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'remove' }).click()
+      await expect(page.getByText('new blog title', { exact: true })).not.toBeVisible()
+    })
   })
 
 })
