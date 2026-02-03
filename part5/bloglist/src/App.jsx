@@ -34,6 +34,12 @@ const App = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (user) {
+      blogService.setToken(user.token)
+    }
+  }, [user])
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
