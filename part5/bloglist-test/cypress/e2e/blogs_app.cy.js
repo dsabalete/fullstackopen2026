@@ -54,4 +54,22 @@ describe('Blogs app', () => {
       cy.contains('Test Blog')
     })
   })
+
+  describe('when a blog exists', function () {
+    beforeEach(function () {
+      cy.login({ username: 'testuser', password: 'testpassword' })
+      cy.createBlog({
+        title: 'Test Blog',
+        author: 'Test Author',
+        url: 'http://test.com',
+      })
+    })
+
+    it('A blog can be liked', function () {
+      cy.contains('Test Blog').parent().find('button').as('theButton')
+      cy.get('@theButton').click()
+      cy.contains('button', 'like').click()
+      cy.contains('likes: 1')
+    })
+  })
 })
