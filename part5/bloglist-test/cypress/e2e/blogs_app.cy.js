@@ -96,5 +96,30 @@ describe('Blogs app', () => {
       cy.get('@theButton').click()
       cy.contains('button', 'remove').should('not.exist')
     })
+
+    it('the blogs are ordered by likes, with the most liked blog being first', function () {
+      cy.createBlog({
+        title: 'Blog 1',
+        author: 'Author 1',
+        url: 'http://blog1.com',
+        likes: 10,
+      })
+      cy.createBlog({
+        title: 'Blog 2',
+        author: 'Author 2',
+        url: 'http://blog2.com',
+        likes: 5,
+      })
+      cy.createBlog({
+        title: 'Blog 3',
+        author: 'Author 3',
+        url: 'http://blog3.com',
+        likes: 20,
+      })
+
+      cy.get('.blog').eq(0).should('contain', 'Blog 3')
+      cy.get('.blog').eq(1).should('contain', 'Blog 1')
+      cy.get('.blog').eq(2).should('contain', 'Blog 2')
+    })
   })
 })
