@@ -33,4 +33,6 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - notes
   - notes-backend
   - notes-test
-  
+
+- [ ] [Part 6 - Advanced State Management](part6)
+  - counter
