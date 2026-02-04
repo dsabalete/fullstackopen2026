@@ -65,11 +65,18 @@ describe('Blogs app', () => {
       })
     })
 
-    it('A blog can be liked', function () {
+    it('a blog can be liked', function () {
       cy.contains('Test Blog').parent().find('button').as('theButton')
       cy.get('@theButton').click()
       cy.contains('button', 'like').click()
       cy.contains('likes: 1')
+    })
+
+    it('a blog can be deleted', function () {
+      cy.contains('Test Blog').parent().find('button').as('theButton')
+      cy.get('@theButton').click()
+      cy.contains('button', 'remove').click()
+      cy.contains('Test Blog').should('not.exist')
     })
   })
 })
