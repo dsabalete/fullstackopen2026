@@ -78,5 +78,23 @@ describe('Blogs app', () => {
       cy.contains('button', 'remove').click()
       cy.contains('Test Blog').should('not.exist')
     })
+
+    it('only the creator can see the delete button', function () {
+      cy.contains('Test Blog').parent().find('button').as('theButton')
+      cy.get('@theButton').click()
+      cy.contains('button', 'remove').should('be.visible')
+
+      const otherUser = {
+        name: 'Other User',
+        username: 'otheruser',
+        password: 'otherpassword',
+      }
+      cy.request('POST', '/api/users/', otherUser)
+      cy.login({ username: 'otheruser', password: 'otherpassword' })
+
+      cy.contains('Test Blog').parent().find('button').as('theButton')
+      cy.get('@theButton').click()
+      cy.contains('button', 'remove').should('not.exist')
+    })
   })
 })
