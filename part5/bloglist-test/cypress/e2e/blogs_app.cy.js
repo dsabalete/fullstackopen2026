@@ -39,4 +39,19 @@ describe('Blogs app', () => {
         .and('have.css', 'color', 'rgb(255, 0, 0)')
     })
   })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'testuser', password: 'testpassword' })
+    })
+
+    it('A blog can be created', function () {
+      cy.contains('button', 'new blog').click()
+      cy.contains('label', 'title').type('Test Blog')
+      cy.contains('label', 'author').type('Test Author')
+      cy.contains('label', 'url').type('http://test.com')
+      cy.get('#create-button').click()
+      cy.contains('Test Blog')
+    })
+  })
 })
