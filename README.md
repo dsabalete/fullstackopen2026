@@ -36,3 +36,7 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
 
 - [ ] [Part 6 - Advanced State Management](part6)
   - counter
+  - notes
+  - notes-backend
+  - redux-anecdotes
+  - unicafe-redux
