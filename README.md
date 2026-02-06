@@ -34,9 +34,11 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - notes-backend
   - notes-test
 
-- [ ] [Part 6 - Advanced State Management](part6)
+- [x] [Part 6 - Advanced State Management](part6)
   - counter
-  - notes-backend
+  - hook-counter
+  - query-anecdotes
+  - query-notes
   - redux-anecdotes
   - redux-notes
   - unicafe-redux
