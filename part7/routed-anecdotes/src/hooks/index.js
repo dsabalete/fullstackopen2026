@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 export const useField = (type) => {
   const [value, setValue] = useState('')
 
@@ -5,9 +7,14 @@ export const useField = (type) => {
     setValue(event.target.value)
   }
 
+  const reset = () => {
+    setValue('')
+  }
+
   return {
     type,
     value,
     onChange,
+    reset,
   }
 }
