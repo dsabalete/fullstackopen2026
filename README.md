@@ -42,3 +42,8 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - redux-anecdotes
   - redux-notes
   - unicafe-redux
+
+- [ ] ## [Part 7 - React router, custom hooks, styling app with CSS and webpack](part7)
+  -
+  -
+  -
