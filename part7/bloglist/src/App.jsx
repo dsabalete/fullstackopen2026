@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setNotificationWithTimeout } from './reducers/notificationReducer'
+import {
+  useNotificationDispatch,
+  setNotification,
+} from './contexts/NotificationContext'
 import {
   initializeBlogs,
   createBlog,
@@ -22,6 +25,7 @@ const App = () => {
   const [password, setPassword] = useState('')
 
   const dispatch = useDispatch()
+  const notificationDispatch = useNotificationDispatch()
 
   const blogFormRef = useRef()
 
@@ -41,7 +45,12 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (err) {
-      dispatch(setNotificationWithTimeout(err.response.data.error, 'error', 5))
+      setNotification(
+        notificationDispatch,
+        err.response.data.error,
+        'error',
+        5,
+      )
     }
   }
 
@@ -52,21 +61,19 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await dispatch(createBlog(blogObject))
-      dispatch(
-        setNotificationWithTimeout(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-          'success',
-          5,
-        ),
+      setNotification(
+        notificationDispatch,
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        'success',
+        5,
       )
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
-      dispatch(
-        setNotificationWithTimeout(
-          exception.response?.data?.error || 'Error creating blog',
-          'error',
-          5,
-        ),
+      setNotification(
+        notificationDispatch,
+        exception.response?.data?.error || 'Error creating blog',
+        'error',
+        5,
       )
     }
   }
@@ -74,16 +81,20 @@ const App = () => {
   const handleLike = async (id, blogToUpdate) => {
     try {
       const returnedBlog = await dispatch(likeBlog(blogToUpdate))
-      dispatch(
-        setNotificationWithTimeout(
-          `blog "${returnedBlog.title}" by ${returnedBlog.author} liked`,
-          'success',
-          5,
-        ),
+      setNotification(
+        notificationDispatch,
+        `blog "${returnedBlog.title}" by ${returnedBlog.author} liked`,
+        'success',
+        5,
       )
     } catch (err) {
       console.log(err)
-      dispatch(setNotificationWithTimeout(err.response.data.error, 'error', 5))
+      setNotification(
+        notificationDispatch,
+        err.response.data.error,
+        'error',
+        5,
+      )
     }
   }
 
@@ -97,8 +108,11 @@ const App = () => {
       try {
         await dispatch(removeBlog(id))
       } catch (err) {
-        dispatch(
-          setNotificationWithTimeout(err.response.data.error, 'error', 5),
+        setNotification(
+          notificationDispatch,
+          err.response.data.error,
+          'error',
+          5,
         )
       }
     }
