@@ -15,7 +15,7 @@ const Blog = ({ blog, updateBlog, removeBlog, username }) => {
     updateBlog(blog.id, updatedBlog)
   }
 
-  const isCreator = blog.user.username === username
+  const isCreator = blog.user?.username === username
 
   return (
     <div style={blogStyle} className="blog">

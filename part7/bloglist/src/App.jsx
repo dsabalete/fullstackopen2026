@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setNotificationWithTimeout } from './reducers/notificationReducer'
+import {
+  initializeBlogs,
+  createBlog,
+  likeBlog,
+  removeBlog,
+} from './reducers/blogReducer'
 
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -11,7 +17,7 @@ import Notification from './components/Notification.jsx'
 import Togglable from './components/Togglable.jsx'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector((state) => state.blogs)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -21,12 +27,8 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) =>
-        setBlogs(blogs.sort((a, b) => (b.likes || 0) - (a.likes || 0))),
-      )
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -64,12 +66,8 @@ const App = () => {
   }
 
   const addBlog = async (blogObject) => {
-    const returnedBlog = await blogService.create(blogObject)
-
-    if (returnedBlog.error) {
-      dispatch(setNotificationWithTimeout(returnedBlog.error, 'error', 5))
-      return
-    } else {
+    try {
+      const returnedBlog = await dispatch(createBlog(blogObject))
       dispatch(
         setNotificationWithTimeout(
           `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
@@ -77,26 +75,21 @@ const App = () => {
           5,
         ),
       )
+      blogFormRef.current.toggleVisibility()
+    } catch (exception) {
+      dispatch(
+        setNotificationWithTimeout(
+          exception.response?.data?.error || 'Error creating blog',
+          'error',
+          5,
+        ),
+      )
     }
-
-    setBlogs(
-      blogs
-        .concat(returnedBlog)
-        .sort((a, b) => (b.likes || 0) - (a.likes || 0)),
-    )
-    blogFormRef.current.toggleVisibility()
   }
 
-  const updateBlog = async (id, updatedBlog) => {
-    const user = updatedBlog.user
+  const handleLike = async (id, blogToUpdate) => {
     try {
-      const returnedBlog = await blogService.update(id, updatedBlog)
-      returnedBlog.user = user
-      setBlogs(
-        blogs
-          .map((blog) => (blog.id !== id ? blog : returnedBlog))
-          .sort((a, b) => (b.likes || 0) - (a.likes || 0)),
-      )
+      const returnedBlog = await dispatch(likeBlog(blogToUpdate))
       dispatch(
         setNotificationWithTimeout(
           `blog "${returnedBlog.title}" by ${returnedBlog.author} liked`,
@@ -110,7 +103,7 @@ const App = () => {
     }
   }
 
-  const removeBlog = async (id) => {
+  const handleDelete = async (id) => {
     const blogToRemove = blogs.find((b) => b.id === id)
     if (
       window.confirm(
@@ -118,8 +111,7 @@ const App = () => {
       )
     ) {
       try {
-        await blogService.remove(id)
-        setBlogs(blogs.filter((blog) => blog.id !== id))
+        await dispatch(removeBlog(id))
       } catch (err) {
         dispatch(
           setNotificationWithTimeout(err.response.data.error, 'error', 5),
@@ -166,15 +158,17 @@ const App = () => {
       )}
       <h3 style={{ marginTop: '2em' }}>list of blogs</h3>
       <div>
-        {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            updateBlog={updateBlog}
-            removeBlog={removeBlog}
-            username={user?.username}
-          />
-        ))}
+        {[...blogs]
+          .sort((a, b) => (b.likes || 0) - (a.likes || 0))
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={handleLike}
+              removeBlog={handleDelete}
+              username={user?.username}
+            />
+          ))}
       </div>
     </div>
   )
