@@ -20,7 +20,9 @@ const create = async (newObject) => {
     const response = await axios.post(baseUrl, newObject, config)
     return response.data
   } catch (error) {
-    return error.response.data
+    return error.response && error.response.data && error.response.data.error
+      ? error.response.data
+      : { error: 'Unknown error occurred' }
   }
 }
 

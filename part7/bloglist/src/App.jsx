@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { setNotificationWithTimeout } from './reducers/notificationReducer'
+
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -12,8 +15,8 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+
+  const dispatch = useDispatch()
 
   const blogFormRef = useRef()
 
@@ -51,10 +54,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (err) {
-      setErrorMessage(`${err.response.data.error}`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotificationWithTimeout(err.response.data.error, 'error', 5))
     }
   }
 
@@ -67,18 +67,16 @@ const App = () => {
     const returnedBlog = await blogService.create(blogObject)
 
     if (returnedBlog.error) {
-      setErrorMessage(returnedBlog.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotificationWithTimeout(returnedBlog.error, 'error', 5))
       return
     } else {
-      setMessage(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+      dispatch(
+        setNotificationWithTimeout(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          'success',
+          5,
+        ),
       )
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
     }
 
     setBlogs(
@@ -99,12 +97,16 @@ const App = () => {
           .map((blog) => (blog.id !== id ? blog : returnedBlog))
           .sort((a, b) => (b.likes || 0) - (a.likes || 0)),
       )
+      dispatch(
+        setNotificationWithTimeout(
+          `blog "${returnedBlog.title}" by ${returnedBlog.author} liked`,
+          'success',
+          5,
+        ),
+      )
     } catch (err) {
       console.log(err)
-      setErrorMessage(err.response.data.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotificationWithTimeout(err.response.data.error, 'error', 5))
     }
   }
 
@@ -119,10 +121,9 @@ const App = () => {
         await blogService.remove(id)
         setBlogs(blogs.filter((blog) => blog.id !== id))
       } catch (err) {
-        setErrorMessage(err.response.data.error)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        dispatch(
+          setNotificationWithTimeout(err.response.data.error, 'error', 5),
+        )
       }
     }
   }
@@ -150,7 +151,7 @@ const App = () => {
   return (
     <div>
       <h1>Bloglist app</h1>
-      <Notification message={message} errorMessage={errorMessage} />
+      <Notification />
 
       {!user && loginForm()}
       {user && (
