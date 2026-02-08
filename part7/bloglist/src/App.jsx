@@ -1,11 +1,15 @@
-import { useState, useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   useNotificationDispatch,
   setNotification,
 } from './contexts/NotificationContext'
-import { initializeUser, loginUser, logoutUser } from './reducers/userReducer'
+import {
+  useUserValue,
+  useUserDispatch,
+  loginUser,
+  logoutUser,
+} from './contexts/UserContext'
 import blogService from './services/blogs'
 
 import Blog from './components/Blog'
@@ -15,11 +19,11 @@ import Notification from './components/Notification.jsx'
 import Togglable from './components/Togglable.jsx'
 
 const App = () => {
-  const user = useSelector((state) => state.user)
+  const user = useUserValue()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const dispatch = useDispatch()
+  const userDispatch = useUserDispatch()
   const notificationDispatch = useNotificationDispatch()
   const queryClient = useQueryClient()
 
@@ -97,15 +101,11 @@ const App = () => {
     },
   })
 
-  useEffect(() => {
-    dispatch(initializeUser())
-  }, [dispatch])
-
   const handleLogin = async (event) => {
     event.preventDefault()
 
     try {
-      await dispatch(loginUser({ username, password }))
+      await loginUser(userDispatch, { username, password })
       setUsername('')
       setPassword('')
     } catch (err) {
@@ -119,7 +119,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    dispatch(logoutUser())
+    logoutUser(userDispatch)
   }
 
   const addBlog = async (blogObject) => {
