@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import {
   useNotificationDispatch,
   setNotification,
@@ -17,6 +18,8 @@ import LoginForm from './components/LoginForm.jsx'
 import BlogForm from './components/BlogForm.jsx'
 import Notification from './components/Notification.jsx'
 import Togglable from './components/Togglable.jsx'
+import Users from './components/Users.jsx'
+import User from './components/User.jsx'
 
 const App = () => {
   const user = useUserValue()
@@ -161,22 +164,8 @@ const App = () => {
     </Togglable>
   )
 
-  return (
+  const blogsList = () => (
     <div>
-      <h1>Bloglist app</h1>
-      <Notification />
-
-      {!user && loginForm()}
-      {user && (
-        <div>
-          <p>
-            {user.name} logged in <button onClick={handleLogout}>logout</button>
-          </p>
-
-          <h3>create new</h3>
-          {blogForm()}
-        </div>
-      )}
       <h3 style={{ marginTop: '2em' }}>list of blogs</h3>
       <div>
         {isLoading && <div>Loading blogs...</div>}
@@ -195,6 +184,44 @@ const App = () => {
             ))}
       </div>
     </div>
+  )
+
+  return (
+    <Router>
+      <div>
+        <h1>Bloglist app</h1>
+        <Notification />
+
+        {user && (
+          <div>
+            <Link to="/" style={{ marginRight: '10px' }}>blogs</Link>
+            <Link to="/users" style={{ marginRight: '10px' }}>users</Link>
+            <span>
+              {user.name} logged in <button onClick={handleLogout}>logout</button>
+            </span>
+          </div>
+        )}
+
+        {!user && loginForm()}
+
+        <Routes>
+          <Route path="/users/:id" element={<User />} />
+          <Route path="/users" element={<Users />} />
+          <Route
+            path="/"
+            element={
+              user ? (
+                <div>
+                  <h3>create new</h3>
+                  {blogForm()}
+                  {blogsList()}
+                </div>
+              ) : null
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 
