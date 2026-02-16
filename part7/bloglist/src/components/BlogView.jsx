@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import blogService from '../services/blogs'
+import CommentForm from './CommentForm.jsx'
 
 const BlogView = ({ updateBlog, removeBlog, username }) => {
   const { id } = useParams()
@@ -47,6 +48,14 @@ const BlogView = ({ updateBlog, removeBlog, username }) => {
       {isCreator && (
         <button onClick={() => removeBlog(blog.id)}>remove</button>
       )}
+
+      <h3>Comments</h3>
+      <CommentForm blogId={blog.id} />
+      <ul>
+        {blog.comments?.map((comment) => (
+          <li key={comment.id}>{comment.content}</li>
+        ))}
+      </ul>
     </div>
   )
 }
