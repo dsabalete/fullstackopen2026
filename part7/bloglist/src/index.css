@@ -17,3 +17,17 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.nav-menu {
+  display: flex;
+  gap: 10px;
+  background-color: lightgrey;
+  padding: 10px;
+}
+
+.blog {
+  padding: 1rem;
+  border: solid;
+  border-width: 1px;
+  margin-bottom: 1rem;
+}

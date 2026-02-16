@@ -9,7 +9,6 @@ import {
   useUserValue,
   useUserDispatch,
   loginUser,
-  logoutUser,
 } from './contexts/UserContext'
 import blogService from './services/blogs'
 
@@ -21,6 +20,7 @@ import Togglable from './components/Togglable.jsx'
 import Users from './components/Users.jsx'
 import User from './components/User.jsx'
 import BlogView from './components/BlogView.jsx'
+import NavigationMenu from './components/NavigationMenu.jsx'
 
 const App = () => {
   const user = useUserValue()
@@ -122,10 +122,6 @@ const App = () => {
     }
   }
 
-  const handleLogout = () => {
-    logoutUser(userDispatch)
-  }
-
   const addBlog = async (blogObject) => {
     newBlogMutation.mutate(blogObject)
   }
@@ -190,18 +186,9 @@ const App = () => {
   return (
     <Router>
       <div>
+        <NavigationMenu />
         <h1>Bloglist app</h1>
         <Notification />
-
-        {user && (
-          <div>
-            <Link to="/" style={{ marginRight: '10px' }}>blogs</Link>
-            <Link to="/users" style={{ marginRight: '10px' }}>users</Link>
-            <span>
-              {user.name} logged in <button onClick={handleLogout}>logout</button>
-            </span>
-          </div>
-        )}
 
         {!user && loginForm()}
 
