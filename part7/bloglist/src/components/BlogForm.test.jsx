@@ -9,10 +9,10 @@ describe('<BlogForm />', () => {
 
     render(<BlogForm createBlog={createBlog} />)
 
-    const titleInput = screen.getByLabelText('title:')
-    const authorInput = screen.getByLabelText('author:')
-    const urlInput = screen.getByLabelText('url:')
-    const createButton = screen.getByText('save')
+    const titleInput = screen.getByLabelText(/title/i)
+    const authorInput = screen.getByLabelText(/author/i)
+    const urlInput = screen.getByLabelText(/url/i)
+    const createButton = screen.getByRole('button', { name: /create blog/i })
 
     await user.type(titleInput, 'New blog title')
     await user.type(authorInput, 'New Author')

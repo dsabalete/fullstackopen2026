@@ -20,35 +20,51 @@ const BlogForm = ({ createBlog }) => {
   }
 
   return (
-    <form onSubmit={addBlog}>
-      <p>
-        <label>
-          title:
-          <input
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </label>
-      </p>
+    <form onSubmit={addBlog} className="blog-form">
+      <div className="blog-form-group">
+        <label htmlFor="blog-title" className="blog-form-label">Title:</label>
+        <input
+          id="blog-title"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          className="blog-form-input"
+          placeholder="Enter blog title..."
+          required
+        />
+      </div>
 
-      <p>
-        <label>
-          author:
-          <input
-            value={author}
-            onChange={(event) => setAuthor(event.target.value)}
-          />
-        </label>
-      </p>
+      <div className="blog-form-group">
+        <label htmlFor="blog-author" className="blog-form-label">Author:</label>
+        <input
+          id="blog-author"
+          value={author}
+          onChange={(event) => setAuthor(event.target.value)}
+          className="blog-form-input"
+          placeholder="Enter author name..."
+          required
+        />
+      </div>
 
-      <p>
-        <label>
-          url:
-          <input value={url} onChange={(event) => setUrl(event.target.value)} />
-        </label>
-      </p>
+      <div className="blog-form-group">
+        <label htmlFor="blog-url" className="blog-form-label">URL:</label>
+        <input
+          id="blog-url"
+          value={url}
+          onChange={(event) => setUrl(event.target.value)}
+          className="blog-form-input"
+          placeholder="Enter blog URL..."
+          type="url"
+          required
+        />
+      </div>
 
-      <button type="submit">save</button>
+      <button
+        type="submit"
+        className="btn btn-primary"
+        style={{ marginTop: '10px' }}
+      >
+        💾 Create Blog
+      </button>
     </form>
   )
 }

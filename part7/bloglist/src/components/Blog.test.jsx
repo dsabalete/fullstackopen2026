@@ -19,8 +19,13 @@ describe('<Blog />', () => {
       </MemoryRouter>
     )
 
-    const element = screen.getByText(`${blog.title} ${blog.author}`)
-    expect(element).toBeDefined()
+    // Check title is rendered
+    const titleElement = screen.getByText(blog.title)
+    expect(titleElement).toBeDefined()
+
+    // Check author is rendered
+    const authorElement = screen.getByText(`by ${blog.author}`, { exact: false })
+    expect(authorElement).toBeDefined()
 
     // Check for link
     const link = screen.getByRole('link')

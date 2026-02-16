@@ -10,13 +10,16 @@ const NavigationMenu = () => {
   }
 
   return (
-    <nav className='nav-menu'>
-      <Link to="/">blogs</Link>
-      <Link to="/users">users</Link>
+    <nav className="nav-menu">
+      <Link to="/" className="nav-link">📚 Blogs</Link>
+      <Link to="/users" className="nav-link">👥 Users</Link>
       {user && (
-        <span>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </span>
+        <div className="nav-user-info">
+          <span className="nav-user-name">👤 {user.name}</span>
+          <button className="btn btn-light btn-small" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       )}
     </nav>
   )

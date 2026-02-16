@@ -162,11 +162,16 @@ const App = () => {
   )
 
   const blogsList = () => (
-    <div>
-      <h3 style={{ marginTop: '2em' }}>list of blogs</h3>
+    <div className="blogs-list-container">
+      <h3 className="blogs-list-header">📚 Blog Posts</h3>
       <div>
-        {isLoading && <div>Loading blogs...</div>}
-        {isError && <div>Error loading blogs</div>}
+        {isLoading && <div className="blogs-list-loading">Loading blogs...</div>}
+        {isError && <div className="blogs-list-loading">Error loading blogs</div>}
+        {blogs && blogs.length === 0 && (
+          <div className="blogs-list-empty-state">
+            No blogs yet. Create your first blog post!
+          </div>
+        )}
         {blogs &&
           [...blogs]
             .sort((a, b) => (b.likes || 0) - (a.likes || 0))
@@ -185,36 +190,40 @@ const App = () => {
 
   return (
     <Router>
-      <div>
+      <div className="bloglist-app">
         <NavigationMenu />
-        <h1>Bloglist app</h1>
-        <Notification />
+        <div className="container">
+          <h1 className="app-title">📝 Bloglist App</h1>
+          <Notification />
 
-        {!user && loginForm()}
+          {!user && loginForm()}
 
-        <Routes>
-          <Route path="/users/:id" element={<User />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/blogs/:id" element={
-            <BlogView
-              updateBlog={handleLike}
-              removeBlog={handleDelete}
-              username={user?.username}
+          <Routes>
+            <Route path="/users/:id" element={<User />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/blogs/:id" element={
+              <BlogView
+                updateBlog={handleLike}
+                removeBlog={handleDelete}
+                username={user?.username}
+              />
+            } />
+            <Route
+              path="/"
+              element={
+                user ? (
+                  <div>
+                    <div className="create-blog-section">
+                      <h3 className="create-blog-heading">✍️ Create New Blog</h3>
+                      {blogForm()}
+                    </div>
+                    {blogsList()}
+                  </div>
+                ) : null
+              }
             />
-          } />
-          <Route
-            path="/"
-            element={
-              user ? (
-                <div>
-                  <h3>create new</h3>
-                  {blogForm()}
-                  {blogsList()}
-                </div>
-              ) : null
-            }
-          />
-        </Routes>
+          </Routes>
+        </div>
       </div>
     </Router>
   )
