@@ -20,6 +20,7 @@ import Notification from './components/Notification.jsx'
 import Togglable from './components/Togglable.jsx'
 import Users from './components/Users.jsx'
 import User from './components/User.jsx'
+import BlogView from './components/BlogView.jsx'
 
 const App = () => {
   const user = useUserValue()
@@ -207,6 +208,13 @@ const App = () => {
         <Routes>
           <Route path="/users/:id" element={<User />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/blogs/:id" element={
+            <BlogView
+              updateBlog={handleLike}
+              removeBlog={handleDelete}
+              username={user?.username}
+            />
+          } />
           <Route
             path="/"
             element={
