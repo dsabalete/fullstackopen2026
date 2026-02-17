@@ -44,3 +44,5 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - unicafe-redux
 
 - [ ] [Part 7 - React router, custom hooks, styling app with CSS and webpack](part7)
+  - graphql-phonebook-backend
+  - library-backend
