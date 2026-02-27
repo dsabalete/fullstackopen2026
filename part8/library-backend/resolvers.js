@@ -1,3 +1,5 @@
+const { GraphQLError } = require('graphql')
+
 const Book = require('./models/book')
 const Author = require('./models/author')
 
@@ -32,24 +34,59 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      let author = await Author.findOne({ name: args.author })
-      if (!author) {
-        author = new Author({ name: args.author })
-        await author.save()
-      }
+      try {
+        let author = await Author.findOne({ name: args.author })
+        if (!author) {
+          author = new Author({ name: args.author })
+          await author.save()
+        }
 
-      const book = new Book({ ...args, author: author._id })
-      await book.save()
-      return book.populate('author')
+        const book = new Book({ ...args, author: author._id })
+        await book.save()
+        return book.populate('author')
+      } catch (error) {
+        if (error.name === 'ValidationError') {
+          throw new GraphQLError('Validation failed: ' + error.message, {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args,
+              error,
+            },
+          })
+        }
+        if (error.code === 11000) {
+          throw new GraphQLError('Book title must be unique', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args,
+              error,
+            },
+          })
+        }
+        throw error
+      }
     },
     editAuthor: async (root, args) => {
-      const author = await Author.findOne({ name: args.name })
-      if (!author) {
-        return null
+      try {
+        const author = await Author.findOne({ name: args.name })
+        if (!author) {
+          return null
+        }
+        author.born = args.setBornTo
+        await author.save()
+        return author
+      } catch (error) {
+        if (error.name === 'ValidationError') {
+          throw new GraphQLError('Validation failed: ' + error.message, {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args,
+              error,
+            },
+          })
+        }
+        throw error
       }
-      author.born = args.setBornTo
-      await author.save()
-      return author
     },
   },
 }
