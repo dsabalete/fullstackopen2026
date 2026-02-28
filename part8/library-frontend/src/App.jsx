@@ -7,6 +7,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Notify from './components/Notify'
 import LoginForm from './components/LoginForm'
+import Recommendations from './components/Recommendations'
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('library-user-token'))
@@ -34,6 +35,10 @@ const App = () => {
         <Route
           path="/add"
           element={token ? <NewBook /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/recommendations"
+          element={token ? <Recommendations /> : undefined}
         />
         <Route
           path="/login"

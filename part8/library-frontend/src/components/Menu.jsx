@@ -17,6 +17,11 @@ const Menu = ({ token, handleLogout }) => {
           add book
         </Link>
       )}
+      {token && (
+        <Link to="/recommendations" style={padding}>
+          recommendations
+        </Link>
+      )}
       {token && <button onClick={handleLogout}>logout</button>}
       {!token && (
         <Link to="/login" style={padding}>
