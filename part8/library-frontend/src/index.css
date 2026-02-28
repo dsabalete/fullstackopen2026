@@ -1,0 +1,36 @@
+.menu {
+  a,
+  button {
+    background: #eee;
+    border: 1px solid #111;
+    border-radius: 2px;
+    color: #111;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-right: 4px;
+    text-decoration: none;
+  }
+
+  button {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    cursor: pointer;
+  }
+}
+
+.authors,
+.books {
+  th {
+    text-align: left;
+  }
+}
+
+.genres {
+  margin-top: 20px;
+
+  button {
+    margin-right: 4px;
+  }
+}

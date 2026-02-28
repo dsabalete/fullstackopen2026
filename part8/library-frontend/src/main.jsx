@@ -6,6 +6,7 @@ import { ApolloProvider } from '@apollo/client/react'
 import { SetContextLink } from '@apollo/client/link/context'
 
 import App from './App.jsx'
+import './index.css'
 
 const authLink = new SetContextLink(({ headers }) => {
   const token = localStorage.getItem('library-user-token')

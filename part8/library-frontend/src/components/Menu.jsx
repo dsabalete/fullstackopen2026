@@ -5,7 +5,7 @@ const Menu = ({ token, handleLogout }) => {
     paddingRight: 5,
   }
   return (
-    <div>
+    <div className="menu">
       <Link to="/" style={padding}>
         authors
       </Link>
