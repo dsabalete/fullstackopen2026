@@ -1,21 +1,36 @@
 import { useState } from 'react'
 import { useQuery } from '@apollo/client/react'
-import { ALL_BOOKS } from '../queries'
+import { ALL_BOOKS, BOOKS_BY_GENRE } from '../queries'
 
 import BookTable from './BookTable'
 
 const Books = () => {
-  const { loading, error, data } = useQuery(ALL_BOOKS)
   const [filter, setFilter] = useState(null)
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error: {error.message}</p>
+  const {
+    loading: booksLoading,
+    error: booksError,
+    data: booksData,
+  } = useQuery(ALL_BOOKS, {
+    skip: !!filter,
+  })
+  const {
+    loading: genreBooksLoading,
+    error: genreBooksError,
+    data: genreBooksData,
+  } = useQuery(BOOKS_BY_GENRE, {
+    variables: { genre: filter },
+    skip: !filter,
+  })
 
-  const books = data.allBooks
+  if (booksLoading || genreBooksLoading) return <p>Loading...</p>
+  if (booksError || genreBooksError)
+    return (
+      <p>Error: {booksError ? booksError.message : genreBooksError.message}</p>
+    )
 
-  const filteredBooks = filter
-    ? books.filter((b) => b.genres.includes(filter))
-    : books
+  const books = booksData?.allBooks || []
+  const filteredBooks = genreBooksData?.booksByGenre || books
 
   const genres = [...new Set(books.flatMap((b) => b.genres))]
 

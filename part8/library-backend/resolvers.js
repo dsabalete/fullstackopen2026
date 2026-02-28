@@ -30,6 +30,9 @@ const resolvers = {
     me: (root, args, context) => {
       return context.currentUser
     },
+    booksByGenre: async (root, args) => {
+      return Book.find({ genres: args.genre }).populate('author')
+    },
   },
   Author: {
     bookCount: async (root) => {
