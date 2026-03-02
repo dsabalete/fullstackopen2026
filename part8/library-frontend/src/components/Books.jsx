@@ -1,11 +1,17 @@
 import { useState } from 'react'
-import { useQuery } from '@apollo/client/react'
-import { ALL_BOOKS, BOOKS_BY_GENRE } from '../queries'
+import {
+  useQuery,
+  useSubscription,
+  useApolloClient,
+} from '@apollo/client/react'
+import { ALL_BOOKS, BOOKS_BY_GENRE, BOOK_ADDED } from '../queries'
+import { addBookToCache } from '../utils/apolloCache'
 
 import BookTable from './BookTable'
 
 const Books = () => {
   const [filter, setFilter] = useState(null)
+  const client = useApolloClient()
 
   const {
     loading: booksLoading,
@@ -21,6 +27,15 @@ const Books = () => {
   } = useQuery(BOOKS_BY_GENRE, {
     variables: { genre: filter },
     skip: !filter,
+  })
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data?.bookAdded
+      if (addedBook) {
+        addBookToCache(client.cache, addedBook)
+      }
+    },
   })
 
   if (booksLoading || genreBooksLoading) return <p>Loading...</p>

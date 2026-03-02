@@ -24,7 +24,7 @@ const NewBook = () => {
       variables: {
         title,
         author,
-        published,
+        published: parseInt(published),
         genres,
       },
     })
