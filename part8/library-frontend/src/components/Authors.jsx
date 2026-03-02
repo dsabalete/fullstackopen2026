@@ -21,7 +21,7 @@ const Authors = ({ token }) => {
             <th>books</th>
           </tr>
           {authors.map((a) => (
-            <tr key={a.id}>
+            <tr key={a._id}>
               <td>{a.name}</td>
               <td>{a.born}</td>
               <td>{a.bookCount}</td>

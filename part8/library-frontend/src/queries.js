@@ -5,7 +5,7 @@ const AUTHOR_DETAILS = gql`
     name
     born
     bookCount
-    id
+    _id
   }
 `
 
@@ -17,7 +17,7 @@ const BOOK_DETAILS = gql`
     }
     genres
     published
-    id
+    _id
   }
 
   ${AUTHOR_DETAILS}
@@ -96,7 +96,7 @@ export const ME = gql`
     me {
       username
       favoriteGenre
-      id
+      _id
     }
   }
 `

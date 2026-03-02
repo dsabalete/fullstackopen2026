@@ -30,7 +30,7 @@ const BirthyearForm = ({ authors }) => {
           >
             <option></option>
             {authors.map((a) => (
-              <option key={a.id} value={a.name}>
+              <option key={a._id} value={a.name}>
                 {a.name}
               </option>
             ))}

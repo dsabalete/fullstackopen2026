@@ -43,6 +43,15 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - redux-notes
   - unicafe-redux
 
-- [ ] [Part 7 - React router, custom hooks, styling app with CSS and webpack](part7)
+- [x] [Part 7 - React router, custom hooks, styling app with CSS and webpack](part7)
   - graphql-phonebook-backend
   - library-backend
+
+- [x] [Part 8 - GraphQL](part8)
+  - graphql-phonebook-backend
+  - graphql-phonebook-frontend
+  - library-backend
+  - library-frontend
+
+- [ ] [Part 9 - Typescript](part9)
+  -

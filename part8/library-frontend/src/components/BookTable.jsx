@@ -8,7 +8,7 @@ const BookTable = ({ books }) => {
           <th>published</th>
         </tr>
         {books.map((a) => (
-          <tr key={a.id}>
+          <tr key={a._id}>
             <td>{a.title}</td>
             <td>{a.author.name}</td>
             <td>{a.published}</td>

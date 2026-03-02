@@ -2,7 +2,7 @@ const typeDefs = /* GraphQL */ `
   type User {
     username: String!
     favoriteGenre: String!
-    id: ID!
+    _id: ID!
   }
 
   type Token {
@@ -14,14 +14,14 @@ const typeDefs = /* GraphQL */ `
     published: Int!
     author: Author!
     genres: [String]
-    id: ID!
+    _id: ID!
   }
 
   type Author {
     name: String!
     born: Int
     bookCount: Int
-    id: ID!
+    _id: ID!
   }
 
   type Query {
