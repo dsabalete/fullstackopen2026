@@ -30,7 +30,29 @@ const resolvers = {
 
       return Book.find(filter).populate('author')
     },
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => {
+      const authors = await Author.aggregate([
+        {
+          $lookup: {
+            from: 'books',
+            localField: '_id',
+            foreignField: 'author',
+            as: 'books',
+          },
+        },
+        {
+          $addFields: {
+            bookCount: { $size: '$books' },
+          },
+        },
+        {
+          $project: {
+            books: 0,
+          },
+        },
+      ])
+      return authors
+    },
     me: (root, args, context) => {
       return context.currentUser
     },
