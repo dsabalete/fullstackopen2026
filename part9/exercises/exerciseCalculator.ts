@@ -25,7 +25,7 @@ export const parseExerciseArguments = (args: string[]): ExerciseInput => {
     };
 };
 
-interface Result {
+export interface Result {
     periodLength: number
     trainingDays: number
     success: boolean
@@ -36,7 +36,7 @@ interface Result {
 }
 
 
-const calculateExercises = (dailyExercises: number[], target: number): Result => {
+export const calculateExercises = (dailyExercises: number[], target: number): Result => {
     const periodLength = dailyExercises.length;
     const trainingDays = dailyExercises.filter((day) => day > 0).length;
     const average = dailyExercises.reduce((a, b) => a + b, 0) / periodLength;
@@ -69,15 +69,18 @@ const calculateExercises = (dailyExercises: number[], target: number): Result =>
 
 //console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
 
-try {
-    const { dailyExercises, target } = parseExerciseArguments(process.argv);
-    console.log(calculateExercises(dailyExercises, target));
-} catch (error: unknown) {
-    let errorMessage = 'Error: ';
-    if (error instanceof Error) {
-        errorMessage += error.message;
-    } else {
-        errorMessage += 'Something bad happened.';
+const lastArg = process.argv[process.argv.length - 1];
+if (lastArg.endsWith('exerciseCalculator.ts')) {
+    try {
+        const { dailyExercises, target } = parseExerciseArguments(process.argv);
+        console.log(calculateExercises(dailyExercises, target));
+    } catch (error: unknown) {
+        let errorMessage = 'Error: ';
+        if (error instanceof Error) {
+            errorMessage += error.message;
+        } else {
+            errorMessage += 'Something bad happened.';
+        }
+        console.log(errorMessage);
     }
-    console.log(errorMessage);
 }
