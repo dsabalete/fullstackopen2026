@@ -1,10 +1,10 @@
 import express from 'express';
-import diaries from '../../data/entries';
+import diaryService from '../services/diaryService';
 
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-    res.send(diaries);
+    res.send(diaryService.getNonSensitiveEntries());
 });
 
 router.post('/', (_req, res) => {
