@@ -1,7 +1,7 @@
-import express, { Response } from 'express';
+import express, { Request, Response } from 'express';
 import patientService from '../services/patientService';
 import { NonSensitivePatient } from '../types';
-import { toNewPatientEntry } from '../utils';
+import { toNewPatient } from '../utils';
 
 const router = express.Router();
 
@@ -9,9 +9,9 @@ router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
     res.send(patientService.getPatients());
 });
 
-router.post('/', (req, res) => {
+router.post('/', (req: Request<unknown, unknown, unknown>, res) => {
     try {
-        const newPatient = toNewPatientEntry(req.body);
+        const newPatient = toNewPatient(req.body);
         const addedEntry = patientService.addPatient(newPatient);
         res.json(addedEntry);
     } catch (error: unknown) {
