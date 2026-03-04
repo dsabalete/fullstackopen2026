@@ -10,6 +10,8 @@ export interface DiaryEntry {
     comment: string;
 }
 
+export type NewDiaryEntry = Omit<DiaryEntry, 'id'>;
+
 // export type NonSensitiveDiaryEntry = Pick<DiaryEntry, 'id' | 'date' | 'weather' | 'visibility'>;
 
 export type NonSensitiveDiaryEntry = Omit<DiaryEntry, 'comment'>;
