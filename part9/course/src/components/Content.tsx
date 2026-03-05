@@ -2,6 +2,9 @@ interface ContentProps {
   courseParts: {
     name: string;
     exerciseCount: number;
+    description?: string;
+    groupProjectCount?: number;
+    backgroundMaterial?: string;
   }[];
 }
 
