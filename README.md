@@ -61,3 +61,4 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - patientor-frontend
   - my-react-app
   - course
+  - typed-notes
