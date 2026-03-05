@@ -3,14 +3,7 @@ import Content from "./components/Content";
 import Total from "./components/Total";
 import type { CoursePart } from "./types";
 
-/**
- * Helper function for exhaustive type checking
- */
-const assertNever = (value: never): never => {
-  throw new Error(
-    `Unhandled discriminated union member: ${JSON.stringify(value)}`,
-  );
-};
+// import { assertNever } from "./utils";
 
 const App = () => {
   const courseName = "Half Stack application development";
@@ -42,6 +35,19 @@ const App = () => {
         "https://type-level-typescript.com/template-literal-types",
       kind: "background",
     },
+    {
+      name: "TypeScript in frontend",
+      exerciseCount: 10,
+      description: "a hard part",
+      kind: "basic",
+    },
+    {
+      name: "Backend development",
+      exerciseCount: 21,
+      description: "Typing the backend",
+      requirements: ["nodejs", "jest"],
+      kind: "special",
+    },
   ];
 
   const totalExercises = courseParts.reduce(
@@ -49,26 +55,26 @@ const App = () => {
     0,
   );
 
-  courseParts.forEach((part) => {
-    switch (part.kind) {
-      case "basic":
-        console.log(part.name, part.description, part.exerciseCount);
-        break;
-      case "group":
-        console.log(part.name, part.exerciseCount, part.groupProjectCount);
-        break;
-      case "background":
-        console.log(
-          part.name,
-          part.description,
-          part.backgroundMaterial,
-          part.exerciseCount,
-        );
-        break;
-      default:
-        assertNever(part);
-    }
-  });
+  // courseParts.forEach((part) => {
+  //   switch (part.kind) {
+  //     case "basic":
+  //       console.log(part.name, part.description, part.exerciseCount);
+  //       break;
+  //     case "group":
+  //       console.log(part.name, part.exerciseCount, part.groupProjectCount);
+  //       break;
+  //     case "background":
+  //       console.log(
+  //         part.name,
+  //         part.description,
+  //         part.backgroundMaterial,
+  //         part.exerciseCount,
+  //       );
+  //       break;
+  //     default:
+  //       assertNever(part);
+  //   }
+  // });
 
   return (
     <div>
