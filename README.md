@@ -54,4 +54,10 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - library-frontend
 
 - [ ] [Part 9 - Typescript](part9)
-  -
+  - exercises
+  - flight-diary
+  - fs-open
+  - patientor-backend
+  - patientor-frontend
+  - my-react-app
+  - course
