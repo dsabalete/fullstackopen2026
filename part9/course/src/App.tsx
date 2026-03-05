@@ -3,8 +3,18 @@ import Content from "./components/Content";
 import Total from "./components/Total";
 import type { CoursePart } from "./types";
 
+/**
+ * Helper function for exhaustive type checking
+ */
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`,
+  );
+};
+
 const App = () => {
   const courseName = "Half Stack application development";
+
   const courseParts: CoursePart[] = [
     {
       name: "Fundamentals",
@@ -38,6 +48,27 @@ const App = () => {
     (sum, part) => sum + part.exerciseCount,
     0,
   );
+
+  courseParts.forEach((part) => {
+    switch (part.kind) {
+      case "basic":
+        console.log(part.name, part.description, part.exerciseCount);
+        break;
+      case "group":
+        console.log(part.name, part.exerciseCount, part.groupProjectCount);
+        break;
+      case "background":
+        console.log(
+          part.name,
+          part.description,
+          part.backgroundMaterial,
+          part.exerciseCount,
+        );
+        break;
+      default:
+        assertNever(part);
+    }
+  });
 
   return (
     <div>
