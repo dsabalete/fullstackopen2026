@@ -1,43 +1,28 @@
 import { useEffect, useState } from "react";
-import { getAllDiaries } from "./services/diaryService";
+import diaryService from "./services/diaryService";
+import type { DiaryEntry } from "./types";
 
-interface DiaryEntry {
-  id: number;
-  date: string;
-  weather: string;
-  visibility: string;
-  comment?: string;
-}
+import NewEntryForm from "./components/NewEntryForm";
+import DiaryEntries from "./components/DiaryEntries";
 
 function App() {
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
 
   useEffect(() => {
-    getAllDiaries().then((data) => {
+    diaryService.getAllDiaries().then((data) => {
       setDiaryEntries(data);
     });
   }, []);
 
+  const handleNewEntry = (entry: DiaryEntry) => {
+    setDiaryEntries(diaryEntries.concat(entry));
+  };
+
   return (
     <div>
-      <table>
-        <tbody>
-          <tr>
-            <th>Date</th>
-            <th>Weather</th>
-            <th>Visibility</th>
-            <th>Comment</th>
-          </tr>
-          {diaryEntries.map((entry) => (
-            <tr key={entry.id}>
-              <td>{entry.date}</td>
-              <td>{entry.weather}</td>
-              <td>{entry.visibility}</td>
-              <td>{entry.comment}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <h1>Flight Diary</h1>
+      <NewEntryForm onNewEntry={handleNewEntry} />
+      <DiaryEntries diaryEntries={diaryEntries} />
     </div>
   );
 }
