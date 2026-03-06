@@ -1,33 +1,74 @@
 import { useState } from "react";
 import diaryService from "../services/diaryService";
-import type { DiaryEntry } from "../types";
+import { type DiaryEntry, Weather, Visibility } from "../types";
+import axios from "axios";
 
 interface NewEntryFormProps {
   onNewEntry: (entry: DiaryEntry) => void;
 }
 
+interface ValidationError {
+  message: string;
+  errors: Record<string, string[]>;
+}
+
 const NewEntryForm = ({ onNewEntry }: NewEntryFormProps) => {
   const [date, setDate] = useState("");
-  const [weather, setWeather] = useState("sunny");
-  const [visibility, setVisibility] = useState("great");
+  const [weather, setWeather] = useState<Weather | "">("");
+  const [visibility, setVisibility] = useState<Visibility | "">("");
   const [comment, setComment] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const resetForm = () => {
+    setDate("");
+    setWeather("");
+    setVisibility("");
+    setComment("");
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!date || !weather || !visibility) {
+      setError("Error: date, weather, or visibility missing");
+      return;
+    }
+
     const data = {
       date,
       weather,
       visibility,
       comment,
     };
-    diaryService.createDiaryEntry(data).then((response) => {
-      onNewEntry(response);
-    });
+
+    diaryService
+      .createDiaryEntry(data)
+      .then((response) => {
+        onNewEntry(response);
+        setError(null);
+        resetForm();
+      })
+      .catch((error: unknown) => {
+        if (
+          axios.isAxiosError<ValidationError, Record<string, unknown>>(error)
+        ) {
+          console.log(error.status);
+          console.error(error.response);
+          setError(
+            error.response?.data?.message ||
+              "An error occurred while adding the entry.",
+          );
+        } else {
+          console.error(error);
+          setError("An unknown error occurred." + JSON.stringify(error));
+        }
+      });
   };
 
   return (
     <div>
       <h2>Add new entry</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -45,33 +86,25 @@ const NewEntryForm = ({ onNewEntry }: NewEntryFormProps) => {
         <div>
           <label>
             Weather:
-            <select
+            <input
+              type="text"
               id="weather"
               name="weather"
               value={weather}
-              onChange={(e) => setWeather(e.target.value)}
-            >
-              <option value="sunny">Sunny</option>
-              <option value="cloudy">Cloudy</option>
-              <option value="rainy">Rainy</option>
-              <option value="windy">Windy</option>
-            </select>
+              onChange={(e) => setWeather(e.target.value as Weather)}
+            />
           </label>
         </div>
         <div>
           <label>
             Visibility:
-            <select
+            <input
+              type="text"
               id="visibility"
               name="visibility"
               value={visibility}
-              onChange={(e) => setVisibility(e.target.value)}
-            >
-              <option value="great">Great</option>
-              <option value="good">Good</option>
-              <option value="ok">Ok</option>
-              <option value="poor">Poor</option>
-            </select>
+              onChange={(e) => setVisibility(e.target.value as Visibility)}
+            />
           </label>
         </div>
         <div>

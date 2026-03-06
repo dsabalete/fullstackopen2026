@@ -33,7 +33,8 @@ const newDiaryParser = (req: Request, _res: Response, next: NextFunction) => {
 
 const errorMiddleware = (error: unknown, _req: Request, res: Response, next: NextFunction) => {
     if (error instanceof z.ZodError) {
-        res.status(400).send({ error: error.issues });
+        const errorMessages = error.issues.map(issue => `Field '${issue.path.join('.')}' - ${issue.message}`).join(', ');
+        res.status(400).send({ error: errorMessages });
     } else {
         next(error);
     }
