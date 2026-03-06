@@ -8,7 +8,8 @@ import { z } from 'zod';
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-    res.send(diaryService.getNonSensitiveEntries());
+    //res.send(diaryService.getNonSensitiveEntries());
+    res.send(diaryService.getEntries());
 });
 
 router.get('/:id', (req, res) => {
