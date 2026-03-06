@@ -84,28 +84,38 @@ const NewEntryForm = ({ onNewEntry }: NewEntryFormProps) => {
           </label>
         </div>
         <div>
-          <label>
-            Weather:
-            <input
-              type="text"
-              id="weather"
-              name="weather"
-              value={weather}
-              onChange={(e) => setWeather(e.target.value as Weather)}
-            />
-          </label>
+          <span>Weather:</span>
+          {Object.values(Weather).map((v) => (
+            <div key={v} style={{ paddingLeft: "1em" }}>
+              <label>
+                <input
+                  type="radio"
+                  name="weather"
+                  value={v}
+                  checked={weather === v}
+                  onChange={() => setWeather(v)}
+                />
+                {v}
+              </label>
+            </div>
+          ))}
         </div>
         <div>
-          <label>
-            Visibility:
-            <input
-              type="text"
-              id="visibility"
-              name="visibility"
-              value={visibility}
-              onChange={(e) => setVisibility(e.target.value as Visibility)}
-            />
-          </label>
+          <span>Visibility:</span>
+          {Object.values(Visibility).map((v) => (
+            <div key={v} style={{ paddingLeft: "1em " }}>
+              <label>
+                <input
+                  type="radio"
+                  name="visibility"
+                  value={v}
+                  checked={visibility === v}
+                  onChange={() => setVisibility(v)}
+                />
+                {v}
+              </label>
+            </div>
+          ))}
         </div>
         <div>
           <label>
