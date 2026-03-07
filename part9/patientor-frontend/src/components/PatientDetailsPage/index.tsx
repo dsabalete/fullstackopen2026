@@ -51,12 +51,18 @@ const PatientDetailsPage = () => {
         <Typography>No entries found.</Typography>
       ) : (
         patient.entries.map((entry, index) => (
-          <Box
-            key={index}
-            sx={{ border: "1px solid black", p: 1, m: 1, borderRadius: 1 }}
-          >
-            {/* Entry details will be added here in later exercises */}
-            <Typography>{JSON.stringify(entry)}</Typography>
+          <Box key={index}>
+            {/* list the date, description and diagnoseCodes */}
+            <Typography>
+              {entry.date} - {entry.description}
+            </Typography>
+            <ul>
+              {entry.diagnosisCodes?.map((code: string) => (
+                <li key={code}>
+                  <Typography>{code}</Typography>
+                </li>
+              ))}
+            </ul>
           </Box>
         ))
       )}
