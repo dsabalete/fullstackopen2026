@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { Female, Male, Transgender } from "@mui/icons-material";
 
-import { Patient, Gender } from "../../types";
+import { Patient, Gender, Diagnosis } from "../../types";
 import patientService from "../../services/patients";
+import diagnosesService from "../../services/diagnoses";
 
 const PatientDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient>();
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -18,6 +20,14 @@ const PatientDetailsPage = () => {
       }
     };
     void fetchPatient();
+
+    const fetchDiagnoses = async () => {
+      if (id) {
+        const result = await diagnosesService.getAll();
+        setDiagnoses(result);
+      }
+    };
+    void fetchDiagnoses();
   }, [id]);
 
   if (!patient) {
@@ -59,7 +69,9 @@ const PatientDetailsPage = () => {
             <ul>
               {entry.diagnosisCodes?.map((code: string) => (
                 <li key={code}>
-                  <Typography>{code}</Typography>
+                  <Typography>
+                    {code} {diagnoses.find((d) => d.code === code)?.name}
+                  </Typography>
                 </li>
               ))}
             </ul>
