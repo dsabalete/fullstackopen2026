@@ -6,6 +6,7 @@ import { Female, Male, Transgender } from "@mui/icons-material";
 import { Patient, Gender, Diagnosis } from "../../types";
 import patientService from "../../services/patients";
 import diagnosesService from "../../services/diagnoses";
+import EntryDetails from "./EntryDetails";
 
 const PatientDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -60,22 +61,8 @@ const PatientDetailsPage = () => {
       {patient.entries.length === 0 ? (
         <Typography>No entries found.</Typography>
       ) : (
-        patient.entries.map((entry, index) => (
-          <Box key={index}>
-            {/* list the date, description and diagnoseCodes */}
-            <Typography>
-              {entry.date} - {entry.description}
-            </Typography>
-            <ul>
-              {entry.diagnosisCodes?.map((code: string) => (
-                <li key={code}>
-                  <Typography>
-                    {code} {diagnoses.find((d) => d.code === code)?.name}
-                  </Typography>
-                </li>
-              ))}
-            </ul>
-          </Box>
+        patient.entries.map((entry) => (
+          <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
         ))
       )}
     </Box>
