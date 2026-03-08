@@ -52,6 +52,8 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
+export type NewEntry = Omit<Entry, "id">;
+
 export interface Patient {
   id: string;
   name: string;
@@ -63,3 +65,8 @@ export interface Patient {
 }
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type UnionOmit<T, K extends string | number | symbol> = T extends any ? Omit<T, K> : never;
+
+export type EntryFormValues = UnionOmit<Entry, "id">;
