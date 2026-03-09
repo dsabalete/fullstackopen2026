@@ -1,4 +1,4 @@
-import { useState, SyntheticEvent } from "react";
+import { useState, SyntheticEvent, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -9,8 +9,15 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  OutlinedInput,
+  Chip,
 } from "@mui/material";
-import { EntryFormValues, HealthCheckRating } from "../../types";
+import { EntryFormValues, HealthCheckRating, Diagnosis } from "../../types";
+import diagnosisService from "../../services/diagnoses";
+import DateField from "./DateField";
+import HealthCheckFields from "./HealthCheckFields";
+import HospitalFields from "./HospitalFields";
+import OccupationalHealthcareFields from "./OccupationalHealthcareFields";
 
 interface Props {
   onSubmit: (values: EntryFormValues) => void;
@@ -25,8 +32,20 @@ const NewEntryForm = ({ onSubmit, onCancel, error }: Props) => {
   const [healthCheckRating, setHealthCheckRating] = useState(
     HealthCheckRating.Healthy,
   );
-  const [diagnosisCodes, setDiagnosisCodes] = useState("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<
+    Array<Diagnosis["code"]>
+  >([]);
   const [type, setType] = useState<EntryFormValues["type"]>("HealthCheck");
+
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+
+  useEffect(() => {
+    const fetchDiagnoses = async () => {
+      const diagnoses = await diagnosisService.getAll();
+      setDiagnoses(diagnoses);
+    };
+    void fetchDiagnoses();
+  }, []);
 
   // Hospital fields
   const [dischargeDate, setDischargeDate] = useState("");
@@ -43,9 +62,7 @@ const NewEntryForm = ({ onSubmit, onCancel, error }: Props) => {
       description,
       date,
       specialist,
-      diagnosisCodes: diagnosisCodes
-        ? diagnosisCodes.split(",").map((c) => c.trim())
-        : undefined,
+      diagnosisCodes,
     };
 
     switch (type) {
@@ -79,18 +96,6 @@ const NewEntryForm = ({ onSubmit, onCancel, error }: Props) => {
         break;
     }
   };
-
-  interface RatingOption {
-    value: HealthCheckRating;
-    label: string;
-  }
-
-  const ratingOptions: RatingOption[] = Object.keys(HealthCheckRating)
-    .filter((v) => isNaN(Number(v)))
-    .map((v) => ({
-      value: HealthCheckRating[v as keyof typeof HealthCheckRating],
-      label: v,
-    }));
 
   return (
     <>
@@ -132,12 +137,10 @@ const NewEntryForm = ({ onSubmit, onCancel, error }: Props) => {
             onChange={({ target }) => setDescription(target.value)}
             sx={{ mb: 1 }}
           />
-          <TextField
+          <DateField
             label="Date"
-            placeholder="YYYY-MM-DD"
-            fullWidth
             value={date}
-            onChange={({ target }) => setDate(target.value)}
+            onChange={setDate}
             sx={{ mb: 1 }}
           />
           <TextField
@@ -149,85 +152,60 @@ const NewEntryForm = ({ onSubmit, onCancel, error }: Props) => {
           />
 
           {type === "HealthCheck" && (
-            <FormControl fullWidth sx={{ mb: 1 }}>
-              <InputLabel>Healthcheck rating</InputLabel>
-              <Select
-                label="Healthcheck rating"
-                value={healthCheckRating}
-                onChange={({ target }) =>
-                  setHealthCheckRating(Number(target.value))
-                }
-              >
-                {ratingOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <HealthCheckFields
+              healthCheckRating={healthCheckRating}
+              setHealthCheckRating={setHealthCheckRating}
+            />
           )}
 
           {type === "Hospital" && (
-            <>
-              <Typography variant="subtitle2" sx={{ mt: 1, mb: 1 }}>
-                Discharge
-              </Typography>
-              <TextField
-                label="Date"
-                placeholder="YYYY-MM-DD"
-                fullWidth
-                value={dischargeDate}
-                onChange={({ target }) => setDischargeDate(target.value)}
-                sx={{ mb: 1, ml: 1 }}
-              />
-              <TextField
-                label="Criteria"
-                fullWidth
-                value={dischargeCriteria}
-                onChange={({ target }) => setDischargeCriteria(target.value)}
-                sx={{ mb: 1, ml: 1 }}
-              />
-            </>
+            <HospitalFields
+              dischargeDate={dischargeDate}
+              setDischargeDate={setDischargeDate}
+              dischargeCriteria={dischargeCriteria}
+              setDischargeCriteria={setDischargeCriteria}
+            />
           )}
 
           {type === "OccupationalHealthcare" && (
-            <>
-              <TextField
-                label="Employer name"
-                fullWidth
-                value={employerName}
-                onChange={({ target }) => setEmployerName(target.value)}
-                sx={{ mb: 1 }}
-              />
-              <Typography variant="subtitle2" sx={{ mt: 1, mb: 1 }}>
-                Sick leave
-              </Typography>
-              <TextField
-                label="Start date"
-                placeholder="YYYY-MM-DD"
-                fullWidth
-                value={sickLeaveStartDate}
-                onChange={({ target }) => setSickLeaveStartDate(target.value)}
-                sx={{ mb: 1, ml: 1 }}
-              />
-              <TextField
-                label="End date"
-                placeholder="YYYY-MM-DD"
-                fullWidth
-                value={sickLeaveEndDate}
-                onChange={({ target }) => setSickLeaveEndDate(target.value)}
-                sx={{ mb: 1, ml: 1 }}
-              />
-            </>
+            <OccupationalHealthcareFields
+              employerName={employerName}
+              setEmployerName={setEmployerName}
+              sickLeaveStartDate={sickLeaveStartDate}
+              setSickLeaveStartDate={setSickLeaveStartDate}
+              sickLeaveEndDate={sickLeaveEndDate}
+              setSickLeaveEndDate={setSickLeaveEndDate}
+            />
           )}
 
-          <TextField
-            label="Diagnosis codes"
-            fullWidth
-            value={diagnosisCodes}
-            onChange={({ target }) => setDiagnosisCodes(target.value)}
-            sx={{ mb: 1 }}
-          />
+          <FormControl fullWidth sx={{ mb: 1 }}>
+            <InputLabel>Diagnosis codes</InputLabel>
+            <Select
+              multiple
+              value={diagnosisCodes}
+              onChange={({ target }) =>
+                setDiagnosisCodes(
+                  typeof target.value === "string"
+                    ? target.value.split(",")
+                    : target.value,
+                )
+              }
+              input={<OutlinedInput label="Diagnosis codes" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+            >
+              {diagnoses.map((diagnosis) => (
+                <MenuItem key={diagnosis.code} value={diagnosis.code}>
+                  {diagnosis.code} {diagnosis.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
             <Button
               color="error"
