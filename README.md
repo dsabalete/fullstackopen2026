@@ -53,7 +53,7 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - library-backend
   - library-frontend
 
-- [ ] [Part 9 - Typescript](part9)
+- [x] [Part 9 - Typescript](part9)
   - course
   - exercises
   - flight-diary-backend
@@ -63,3 +63,6 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - patientor-backend
   - patientor-frontend
   - typed-notes
+
+- [ ] [Part 10 - React Native](part10)
+  -
