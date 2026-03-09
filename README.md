@@ -65,4 +65,4 @@ Exercises and examples from the [Deep Dive Into Modern Web Development](https://
   - typed-notes
 
 - [ ] [Part 10 - React Native](part10)
-  -
+  - rate-repository-app
