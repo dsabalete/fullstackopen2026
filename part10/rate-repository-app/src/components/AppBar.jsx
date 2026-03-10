@@ -5,17 +5,20 @@ import AppBarTab from "./AppBarTab";
 
 const styles = StyleSheet.create({
   container: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
     paddingTop: Constants.statusBarHeight,
     backgroundColor: theme.colors.appBarBackground,
     padding: 20,
-    // ...
   },
 });
 
 const AppBar = () => {
   return (
     <View style={styles.container}>
-      <AppBarTab label="Repositories" />
+      <AppBarTab label="Repositories" to="/" />
+      <AppBarTab label="Sign in" to="/login" />
     </View>
   );
 };
