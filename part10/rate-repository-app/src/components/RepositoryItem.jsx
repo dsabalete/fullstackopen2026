@@ -2,13 +2,13 @@ import { View, Text } from "react-native";
 
 const RepositoryItem = ({ item }) => (
   <View>
-    <Text>{item.fullName}</Text>
-    <Text>{item.description}</Text>
-    <Text>{item.language}</Text>
-    <Text>{item.stargazersCount}</Text>
-    <Text>{item.forksCount}</Text>
-    <Text>{item.reviewCount}</Text>
-    <Text>{item.ratingAverage}</Text>
+    <Text>Full name: {item.fullName}</Text>
+    <Text>Description: {item.description}</Text>
+    <Text>Language: {item.language}</Text>
+    <Text>Stars: {item.stargazersCount}</Text>
+    <Text>Forks: {item.forksCount}</Text>
+    <Text>Reviews: {item.reviewCount}</Text>
+    <Text>Rating: {item.ratingAverage}</Text>
   </View>
 );
 
