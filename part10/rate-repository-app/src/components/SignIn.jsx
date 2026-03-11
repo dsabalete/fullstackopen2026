@@ -18,12 +18,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 3,
     padding: 10,
+    fontFamily: theme.fonts.main,
   },
   inputError: {
     borderColor: theme.colors.error,
   },
   errorText: {
     color: theme.colors.error,
+    fontFamily: theme.fonts.main,
   },
   button: {
     backgroundColor: theme.colors.primary,
@@ -62,6 +64,7 @@ const SignIn = () => {
             styles.inputError,
         ]}
         placeholder="Username"
+        placeholderTextColor={theme.colors.textSecondary}
         value={formik.values.username}
         onChangeText={formik.handleChange("username")}
         onBlur={formik.handleBlur("username")}
@@ -77,6 +80,7 @@ const SignIn = () => {
             styles.inputError,
         ]}
         placeholder="Password"
+        placeholderTextColor={theme.colors.textSecondary}
         value={formik.values.password}
         onChangeText={formik.handleChange("password")}
         onBlur={formik.handleBlur("password")}
