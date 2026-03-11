@@ -1,5 +1,6 @@
 import { Text, TextInput, Pressable, View } from "react-native";
 import { useFormik } from "formik";
+import * as yup from "yup";
 
 const initialValues = {
   mass: "",
@@ -10,9 +11,21 @@ const getBodyMassIndex = (mass, height) => {
   return Math.round(mass / Math.pow(height, 2));
 };
 
+const validationSchema = yup.object().shape({
+  mass: yup
+    .number()
+    .min(1, "Weight must be greater or equal to 1")
+    .required("Weight is required"),
+  height: yup
+    .number()
+    .min(0.5, "Height must be greater or equal to 0.5")
+    .required("Height is required"),
+});
+
 const BodyMassIndexForm = ({ onSubmit }) => {
   const formik = useFormik({
     initialValues,
+    validationSchema,
     onSubmit,
   });
 
@@ -22,12 +35,20 @@ const BodyMassIndexForm = ({ onSubmit }) => {
         placeholder="Weight (kg)"
         value={formik.values.mass}
         onChangeText={formik.handleChange("mass")}
+        onBlur={formik.handleBlur("mass")}
       />
+      {formik.touched.mass && formik.errors.mass && (
+        <Text style={{ color: "red" }}>{formik.errors.mass}</Text>
+      )}
       <TextInput
         placeholder="Height (m)"
         value={formik.values.height}
         onChangeText={formik.handleChange("height")}
+        onBlur={formik.handleBlur("height")}
       />
+      {formik.touched.height && formik.errors.height && (
+        <Text style={{ color: "red" }}>{formik.errors.height}</Text>
+      )}
       <Pressable onPress={formik.handleSubmit}>
         <Text>Calculate</Text>
       </Pressable>
