@@ -10,11 +10,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppBarTab = ({ label, to }) => {
+const AppBarTab = ({ label, to, onPress }) => {
+  if (to) {
+    return (
+      <Link to={to} component={Pressable} style={{ padding: 10 }}>
+        <Text style={styles.text}>{label}</Text>
+      </Link>
+    );
+  }
+
   return (
-    <Link to={to} component={Pressable} style={{ padding: 10 }}>
+    <Pressable onPress={onPress} style={{ padding: 10 }}>
       <Text style={styles.text}>{label}</Text>
-    </Link>
+    </Pressable>
   );
 };
 
