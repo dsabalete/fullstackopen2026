@@ -17,6 +17,7 @@ const compat = new FlatCompat({
 
 export default defineConfig([
   {
+    files: ["**/*.{js,jsx}"],
     extends: compat.extends("eslint:recommended", "plugin:react/recommended"),
 
     plugins: {
@@ -42,6 +43,17 @@ export default defineConfig([
     rules: {
       "react/prop-types": "off",
       "react/react-in-jsx-scope": "off",
+    },
+  },
+  {
+    files: ["metro.config.js"],
+    languageOptions: {
+      sourceType: "commonjs",
+      globals: {
+        require: "readonly",
+        module: "readonly",
+        __dirname: "readonly",
+      },
     },
   },
 ]);
