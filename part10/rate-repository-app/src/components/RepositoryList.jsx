@@ -1,5 +1,5 @@
 import { FlatList } from "react-native";
-import { useEffect } from "react";
+
 import RepositoryItem from "./RepositoryItem";
 import ItemSeparator from "./ItemSeparator";
 
