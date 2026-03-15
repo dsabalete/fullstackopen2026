@@ -19,3 +19,15 @@ export const GET_REPOSITORIES = gql`
   ${REPOSITORY_LIST_FIELDS}
   ${PAGE_INFO_FIELDS}
 `;
+
+export const GET_USERS = gql`
+  query {
+    users {
+      edges {
+        node {
+          username
+        }
+      }
+    }
+  }
+`;
