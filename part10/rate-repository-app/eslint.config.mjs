@@ -18,17 +18,22 @@ const compat = new FlatCompat({
 export default defineConfig([
   {
     files: ["**/*.{js,jsx}"],
-    extends: compat.extends("eslint:recommended", "plugin:react/recommended"),
+    extends: compat.extends(
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:jest/recommended",
+    ),
 
     plugins: {
       react,
       "react-native": reactNative,
     },
 
-    languageOptions: {
+      languageOptions: {
       globals: {
         ...reactNative.environments["react-native"]["react-native"],
         fetch: "readonly",
+        console: "readonly",
       },
 
       parser: babelParser,

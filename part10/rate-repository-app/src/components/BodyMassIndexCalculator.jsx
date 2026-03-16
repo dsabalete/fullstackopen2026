@@ -62,7 +62,7 @@ const BodyMassIndexCalculator = () => {
     const height = parseFloat(values.height);
 
     if (!isNaN(mass) && !isNaN(height) && height !== 0) {
-      // eslint-disable-next-line no-undef
+       
       console.log(`Your body mass index is: ${getBodyMassIndex(mass, height)}`);
     }
   };
