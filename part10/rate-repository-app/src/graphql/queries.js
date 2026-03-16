@@ -40,3 +40,12 @@ export const ME = gql`
     }
   }
 `;
+
+export const GET_REPOSITORY = gql`
+  query Repository($id: ID!) {
+    repository(id: $id) {
+      ...RepositoryListFields
+    }
+  }
+  ${REPOSITORY_LIST_FIELDS}
+`;
