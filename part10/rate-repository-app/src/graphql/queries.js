@@ -49,3 +49,26 @@ export const GET_REPOSITORY = gql`
   }
   ${REPOSITORY_LIST_FIELDS}
 `;
+
+export const GET_REVIEWS = gql`
+  query Reviews($id: ID!) {
+    repository(id: $id) {
+      id
+      fullName
+      reviews {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            user {
+              id
+              username
+            }
+          }
+        }
+      }
+    }
+  }
+`;
