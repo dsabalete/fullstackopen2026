@@ -1,3 +1,4 @@
+import "./src/utils/polyfill";
 import { NativeRouter } from "react-router-native";
 import { ApolloProvider } from "@apollo/client/react";
 

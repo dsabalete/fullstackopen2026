@@ -56,3 +56,9 @@ export const MUTATION_CREATE_USER = gql`
     }
   }
 `;
+
+export const MUTATION_DELETE_REVIEW = gql`
+  mutation DeleteReview($id: ID!) {
+    deleteReview(id: $id)
+  }
+`;
