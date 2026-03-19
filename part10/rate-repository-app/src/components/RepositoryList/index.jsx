@@ -11,6 +11,7 @@ import useRepositories from "../../hooks/useRepositories";
 
 export const RepositoryListContainer = ({
   repositories,
+  onEndReached,
   orderBy,
   setOrderBy,
   orderDirection,
@@ -43,6 +44,8 @@ export const RepositoryListContainer = ({
         </Pressable>
       )}
       keyExtractor={(item) => item.id}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
     />
   );
 };
@@ -53,15 +56,22 @@ const RepositoryList = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [debouncedSearchKeyword] = useDebounce(searchKeyword, 500);
 
-  const { repositories } = useRepositories(
+  const { repositories, fetchMore } = useRepositories({
+    first: 8,
     orderBy,
     orderDirection,
-    debouncedSearchKeyword,
-  );
+    searchKeyword: debouncedSearchKeyword,
+  });
+
+  const onEndReached = () => {
+    console.log("You have reached the end of the list");
+    fetchMore();
+  };
 
   return (
     <RepositoryListContainer
       repositories={repositories}
+      onEndReached={onEndReached}
       orderBy={orderBy}
       setOrderBy={setOrderBy}
       orderDirection={orderDirection}
