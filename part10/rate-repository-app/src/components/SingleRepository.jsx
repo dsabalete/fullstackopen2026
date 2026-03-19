@@ -1,9 +1,9 @@
 import { FlatList, View, StyleSheet } from "react-native";
 import { useParams } from "react-router-native";
 import { format } from "date-fns";
+import { useMemo, useCallback } from "react";
 
 import useRepository from "../hooks/useRepository";
-import useReviews from "../hooks/useReviews";
 import RepositoryItem from "./RepositoryItem";
 import ItemSeparator from "./ItemSeparator";
 import Text from "./Text";
@@ -65,10 +65,17 @@ const ReviewItem = ({ review }) => {
 
 const SingleRepository = () => {
   const { id } = useParams();
-  const { repository, loading } = useRepository(id);
-  const { reviews, loading: loadingReviews } = useReviews(id);
+  const { repository, loading, fetchMore } = useRepository({ id, first: 10 });
 
-  if (loading || loadingReviews || !repository) {
+  const onEndReach = useCallback(() => {
+    fetchMore();
+  }, [fetchMore]);
+
+  const reviews = useMemo(() => {
+    return repository?.reviews.edges.map((edge) => edge.node) ?? [];
+  }, [repository]);
+
+  if (!repository && loading) {
     return null;
   }
 
@@ -84,6 +91,7 @@ const SingleRepository = () => {
         </View>
       )}
       onEndReachedThreshold={0.5}
+      onEndReached={onEndReach}
     />
   );
 };

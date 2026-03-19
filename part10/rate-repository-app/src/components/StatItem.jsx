@@ -17,6 +17,9 @@ const styles = {
 };
 
 const formatCount = (count) => {
+  if (count === undefined || count === null) {
+    return "0";
+  }
   if (count >= 1000) {
     return (count / 1000).toFixed(1) + "k";
   }

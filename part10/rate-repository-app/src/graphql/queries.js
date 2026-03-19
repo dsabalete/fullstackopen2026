@@ -1,5 +1,9 @@
 import { gql } from "@apollo/client";
-import { PAGE_INFO_FIELDS, REPOSITORY_LIST_FIELDS } from "./fragments";
+import {
+  PAGE_INFO_FIELDS,
+  REPOSITORY_LIST_FIELDS,
+  REVIEW_FIELDS,
+} from "./fragments";
 
 export const GET_REPOSITORIES = gql`
   query GetRepositories(
@@ -33,7 +37,7 @@ export const GET_REPOSITORIES = gql`
 `;
 
 export const GET_USERS = gql`
-  query {
+  query GetUsers {
     users {
       edges {
         node {
@@ -45,7 +49,7 @@ export const GET_USERS = gql`
 `;
 
 export const GET_CURRENT_USER = gql`
-  query getCurrentUser($includeReviews: Boolean = false) {
+  query GetCurrentUser($includeReviews: Boolean = false) {
     me {
       id
       username
@@ -53,9 +57,9 @@ export const GET_CURRENT_USER = gql`
         edges {
           node {
             id
+            text
             rating
             createdAt
-            text
             repository {
               id
               fullName
@@ -68,33 +72,24 @@ export const GET_CURRENT_USER = gql`
 `;
 
 export const GET_REPOSITORY = gql`
-  query Repository($id: ID!) {
+  query GetRepository($id: ID!, $first: Int, $after: String) {
     repository(id: $id) {
       ...RepositoryListFields
-    }
-  }
-  ${REPOSITORY_LIST_FIELDS}
-`;
-
-export const GET_REVIEWS = gql`
-  query Reviews($id: ID!) {
-    repository(id: $id) {
-      id
-      fullName
-      reviews {
+      reviews(first: $first, after: $after) {
+        totalCount
         edges {
           node {
-            id
-            text
-            rating
-            createdAt
-            user {
-              id
-              username
-            }
+            ...ReviewFields
           }
+          cursor
+        }
+        pageInfo {
+          ...PageInfoFields
         }
       }
     }
   }
+  ${REPOSITORY_LIST_FIELDS}
+  ${REVIEW_FIELDS}
+  ${PAGE_INFO_FIELDS}
 `;

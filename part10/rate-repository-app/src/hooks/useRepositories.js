@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from "react";
 import { useQuery } from "@apollo/client/react";
 
 import { GET_REPOSITORIES } from "../graphql/queries";
@@ -8,22 +9,26 @@ const useRepositories = ({
   searchKeyword = "",
   first = 8,
 }) => {
-  const variables = {
-    orderBy,
-    orderDirection,
-    searchKeyword,
-    first,
-  };
+  const variables = useMemo(
+    () => ({
+      orderBy,
+      orderDirection,
+      searchKeyword,
+      first,
+    }),
+    [orderBy, orderDirection, searchKeyword, first],
+  );
 
   const { data, loading, refetch, fetchMore, ...result } = useQuery(
     GET_REPOSITORIES,
     {
       fetchPolicy: "cache-and-network",
       variables,
+      notifyOnNetworkStatusChange: true,
     },
   );
 
-  const handleFetchMore = () => {
+  const handleFetchMore = useCallback(() => {
     const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
 
     if (!canFetchMore) {
@@ -36,7 +41,7 @@ const useRepositories = ({
         ...variables,
       },
     });
-  };
+  }, [data, loading, fetchMore, variables]);
 
   return {
     repositories: data?.repositories,

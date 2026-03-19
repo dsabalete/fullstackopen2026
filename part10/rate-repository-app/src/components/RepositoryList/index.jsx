@@ -64,7 +64,6 @@ const RepositoryList = () => {
   });
 
   const onEndReached = () => {
-    console.log("You have reached the end of the list");
     fetchMore();
   };
 
